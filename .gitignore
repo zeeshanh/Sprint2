@@ -1,0 +1,6 @@
+*.pyc
+*.xlsx
+graph-data.md
+facebookData.md
+*.gz
+.DS_Store

@@ -1,0 +1,27 @@
+<!doctype html>
+<head>
+  <title>Flaskr</title>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+  <script type="text/javascript">
+  console.log(document.domain)
+  console.log(location.port)
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.emit('myEvent')
+    // socket.on('connect', function() {
+    //     socket.emit('myEvent');
+    // });
+  </script>
+</head>
+<body>
+  <div class=page>
+    <button type="button" name="button">Add Story</button>
+    <form id="story_form">
+      Name:<br>
+      <input type="text" name="name"><br>
+      Story:<br>
+      <textarea name="story" form="story_form">Enter text here...</textarea>
+      <br>Image URL:<br>
+      <input type="text" name="image">
+    </form>
+  </div>
+</body>
