@@ -113,7 +113,7 @@ def connect(username):
     userID = tempUser.getID()
     emit("registered", userID)
     print('USERS', users)
-    allUsers = [x.getName() for x in users]
+    allUsers = [x.getName() for x in users.values()]
     socketio.emit("newUser", allUsers)
 
 
