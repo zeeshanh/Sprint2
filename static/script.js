@@ -16,7 +16,7 @@ $(document).ready(function(){
             });
 
              socket.on("registered", function(msg){
-                var redirectUrl = "http:" + window.location.hostname + msg;
+                var redirectUrl = "https:" + window.location.hostname + '/' + msg;
                 console.log(redirectUrl);
                 window.location.replace(redirectUrl);
              })
