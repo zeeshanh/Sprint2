@@ -61,9 +61,9 @@ def index():
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
-    newStories = [x.__dict__ for x in list(stories.values())]
     global poolMoney
     global stories
+    newStories = [x.__dict__ for x in list(stories.values())]
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
@@ -74,7 +74,7 @@ def connect():
         	thread = socketio.start_background_task(target=timerHelper)
 
     if stories =={}:
-    	temp = User.User(name="Zeeshan", balance = 500)
+        temp = User.User(name="Zeeshan", balance = 500)
         users[temp.getID()] = temp
         tempS = Story.Story("College books", temp.getID(), "I need to buy books for college", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
         stories[temp.getID()] = tempS
