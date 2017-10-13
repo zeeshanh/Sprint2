@@ -16,7 +16,7 @@ socketio = SocketIO(app)
 
 @app.route("/")
 def hello():
-    return render_template('main.html')
+    return render_template('stories.html')
 
 @socketio.on('connect')
 def connect():
@@ -27,6 +27,11 @@ def connect(data):
     stories.append(data)
     print("New story", data)
     socketio.emit('updateStories', stories)
+
+@socketio.on('newVote')
+def newVote(data):
+    print("New vote", data)
+    # socketio.emit('updateStories', stories)
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
