@@ -98,12 +98,12 @@
     })
 
     socket.on('timerUpdate', function(time){
-      $("#timer").html(time + " seconds");
+      $("#timer").html(time);
       console.log("updating timer");
     })
 
     socket.on('winner', function(winner){
-      alert(winner);
+      Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded') 
     })
 
     window.onload = function(){
@@ -156,16 +156,19 @@
 <body>
   <div id="particles-js"></div>
   <div class="page">
+
     <div id = "ownerID">{{uID}}</div>
-    <div id = "header">
-      <div class = "timeWrapper">
-        <i class ="time-icon medium material-icons">access_time</i>
-      <h1 id = "timer"></h1>
+    <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo left">Golden Days</a>
+      <ul id="nav-mobile" class="right ">
+        <li class = "timerWrapper"><i class ="time-icon medium material-icons">access_time</i></li>
+        <li id = "timer"></li>
+        <li class = "moneyWrapper"> <i class ="money-icon medium material-icons">attach_money</i></li>
+        <li id = "money"</li>
+      </ul>
     </div>
-    <div class = "moneyWrapper">
-      <i class ="money-icon medium material-icons">attach_money</i>
-      <h1 id = "money"></h1>
-    </div>
+  </nav>
   </div>
     <br>
     <br>
