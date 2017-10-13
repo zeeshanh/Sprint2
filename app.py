@@ -112,7 +112,7 @@ def connect(username):
     socketio.emit("updatedMoney", poolMoney)
 
     #adding user to state
-    tempUser = User.User(name = username, balance = userBal-100)
+    tempUser = User.User(name = username['val'], balance = userBal-100)
     users[tempUser.getID()] = tempUser
     userID = tempUser.getID()
     emit("registered", userID)
