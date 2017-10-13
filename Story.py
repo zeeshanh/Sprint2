@@ -1,38 +1,47 @@
+from sets import Set
+
+
 class Story:
     ownerID = ""
-    upvote = 0
-    downvote = 0
     text = ""
     displays = []
 
-    upvoters = []
-    downvoters = []
+    upvoters = Set()
+    downvoters = Set()
 
-    def __init__(self, ownerId, upvote=0, downvote=0, text="", displays=[]):
+    def __init__(self, ownerId, text="", displays=[]):
         self.ownerID = ownerId
-        self.upvote = upvote
-        self.downvote = downvote
         self.text = text
         self.displays = displays
-        self.upvoters = []
-        self.downvoters = []
+        self.upvoters = Set()
+        self.downvoters = Set()
 
     def getOwnerID(self):
         return self.ownerID
 
-    def getUpvote(self):
-        return self.upvote
+    def getUpvoteNum(self):
+        return self.upvoters.__len__()
 
-    def getDownvote(self):
-        return self.downvote
+    def getDownvoteNum(self):
+        return self.downvoters.__len__()
 
     def getDisplays(self):
         return self.displays
 
     def addUpvote(self, user):
-        self.upvote += 1
-        self.upvoters.append(user)
+        if self.ownerID == user.id:
+            print("One cannot", user.id, "vote for oneself.")
+        elif self.upvoters.__contains__(user.id) or self.downvoters.__contains__(user.id):
+            print("User:", user.id, "has already voted.")
+        else:
+            self.upvote += 1
+            self.upvoters.add(user.id)
 
     def addDownvote(self, user):
-        self.downvote += 1
-        self.downvoters.append(user)
+        if self.ownerID == user.id:
+            print("One cannot vote for oneself.")
+        elif self.upvoters.__contains__(user.id) or self.downvoters.__contains__(user.id):
+            print("User:", user.id, "has already voted.")
+        else:
+            self.downvote += 1
+            self.downvoters.add(user.id)
