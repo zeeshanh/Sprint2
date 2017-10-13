@@ -14,11 +14,9 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-
-
 @app.route("/")
 def hello():
-    return render_template('index.html')
+    return render_template('main.html')
 
 @app.route("/main")
 def main():
@@ -32,6 +30,11 @@ def connect():
 @socketio.on('myEvent')
 def handle_my_custom_event(json):
     print('received json: ' + str(json))
+    print("New user connected!")
+
+@socketio.on('addStory')
+def connect(data):
+    print("New story", data)
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
@@ -39,5 +42,3 @@ if __name__ == '__main__':
     # deploy as an eventlet WSGI server
     #eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
     socketio.run(app)
-
-    
