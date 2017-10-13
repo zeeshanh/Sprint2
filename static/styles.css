@@ -1,7 +1,6 @@
 body {
-  background:url('http://cdn.wallpapersafari.com/13/6/Mpsg2b.jpg');
+  background-color: none;
   margin:0px;
-  font-family: 'Ubuntu', sans-serif;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
 }
@@ -62,11 +61,43 @@ h1, h2, h3, h4, h5, h6, a {
   cursor:pointer;
 }
 
-#timer{
-  float: right;
+
+
+#timeWrapper{
+  display:inline-block;
+  width:50%;
+
 }
 
-/*Media Querie*/
+.money-icon{
+  float:left;
+}
+
+.time-icon{
+  float:left;
+}
+
+.vote-button{
+  float:left;
+}
+
+#moneyWrapper,#money, #timeWrapper, #timer, .numVotes{
+  display: inline-block;
+}
+
+#header{
+  height:30%;
+}
+
+#header{
+  display:flex;
+}
+
+.numVotes{
+  color: none;
+}
+
+
 @media only screen and (min-width : 150px) and (max-width : 530px){
   .login-form h3 {
     text-align:center;

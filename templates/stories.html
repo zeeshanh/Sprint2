@@ -5,6 +5,10 @@
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <link rel="stylesheet" href={{ url_for('static', filename='stories.css') }}>
   <script type="text/javascript" defer>
 
     var socket = io.connect('http://' + document.domain + ':' + location.port);
@@ -35,6 +39,7 @@
 
       var numVotes = document.createElement('span')
       numVotes.classList.add("badge");
+      //numVotes.classList.add("numVotes")
 
       title.appendChild(document.createTextNode(story.name))
       text.appendChild(document.createTextNode(story.text))
@@ -51,9 +56,17 @@
 
     function createVoteButton(story) {
       var button = document.createElement('button')
-      button.innerText = 'vote'
+      button.classList.add("vote-button")
+      //button.innerText = 'vote'
       var voterID = $("#ownerID").html()
       button.addEventListener('click', emitVote.bind(this, story.ownerID, voterID))
+
+      icon= document.createElement("i");
+      icon.classList.add("material-icons")
+      icon.classList.add("medium")
+      icon.innerText = "thumb_up"
+
+      button.appendChild(icon)
       return button
     }
 
@@ -85,7 +98,7 @@
     })
 
     socket.on('timerUpdate', function(time){
-      $("#timer").html(time);
+      $("#timer").html(time + " seconds");
       console.log("updating timer");
     })
 
@@ -132,13 +145,30 @@
         $("#cancelButton").hide()
         $("#ownerID").hide();
     });
+
+    /* ---- particles.js config ---- */
+
+
   </script>
+
+
 </head>
 <body>
-  <div class=page>
+  <div id="particles-js"></div>
+  <div class="page">
     <div id = "ownerID">{{uID}}</div>
-    <div id = "timer">Dummy</div>
-    <div id = "money">Test</div>
+    <div id = "header">
+      <div class = "timeWrapper">
+        <i class ="time-icon medium material-icons">access_time</i>
+      <h1 id = "timer"></h1>
+    </div>
+    <div class = "moneyWrapper">
+      <i class ="money-icon medium material-icons">attach_money</i>
+      <h1 id = "money"></h1>
+    </div>
+  </div>
+    <br>
+    <br>
     <button id="viewForm" class = "waves-effect waves-light btn" type="button" name="button">Add Story</button>
     <form id="story_form">
       Name:<br>
