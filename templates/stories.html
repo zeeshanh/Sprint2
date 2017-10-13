@@ -8,29 +8,35 @@
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('myEvent')
 
-    function emitVote(story){
-      socket.emit('newVote', story)
+    function emitVote(storyID, voterID){
+      socket.emit('newVote', storyID, voterID)
     }
 
     function createStory(story) {
+
       var newListItem = document.createElement('div')
       var title = document.createElement('h2')
       var text = document.createElement('p')
-      var image = createStoryImage(story.storyImage)
+      var image = createStoryImage(story.displays)
       var button = createVoteButton(story)
-      title.appendChild(document.createTextNode(story.storyName))
-      text.appendChild(document.createTextNode(story.storyText))
+      var numVotes = document.createElement('p')
+      title.appendChild(document.createTextNode(story.name))
+      text.appendChild(document.createTextNode(story.text))
+      numVotes.appendChild(document.createTextNode(story.upvote))
       newListItem.appendChild(image)
       newListItem.appendChild(title)
       newListItem.appendChild(text)
       newListItem.appendChild(button)
+      newListItem.appendChild(numVotes)
+      newListItem.setAttribute("id", story.ownerID);
       return newListItem
     }
 
     function createVoteButton(story) {
       var button = document.createElement('button')
       button.innerText = 'vote'
-      button.addEventListener('click', emitVote.bind(this, story))
+      var voterID = $("#ownerID").html()
+      button.addEventListener('click', emitVote.bind(this, story.ownerID, voterID))
       return button
     }
 
@@ -43,6 +49,7 @@
     }
 
     socket.on('updateStories', function(stories){
+      console.log(stories);
       var storiesList = document.getElementById('storiesList')
       var newList = document.createElement('div')
       newList.id = 'storiesList'
@@ -58,18 +65,31 @@
       $("#money").html(money);
     })
 
+    socket.on('timerUpdate', function(time){
+      $("#timer").html(time);
+      console.log("updating timer");
+    })
+
+    socket.on('winner', function(winner){
+      alert(winner);
+    })
+
     window.onload = function(){
       document.getElementById("storyButton").addEventListener('click', function(event){
         var storyName = document.getElementById('storyName').value
         var storyText = document.getElementById('storyText').value
         var storyImage = document.getElementById('storyImage').value
-        socket.emit('addStory', {storyName, storyText, storyImage})
+        var ownerID = $("#ownerID").html()
+        console.log(ownerID)
+        socket.emit('addStory', {storyName, ownerID,  storyText, storyImage})
       })
     }
   </script>
 </head>
 <body>
   <div class=page>
+    <div id = "ownerID">{{uID}}</div>
+    <div id = "timer">Dummy</div>
     <div id = "money">Test</div>
     <button id="storyButton" type="button" name="button">Add Story</button>
     <form id="story_form">

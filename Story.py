@@ -9,13 +9,14 @@ class Story:
     upvoters = Set()
     downvoters = Set()
 
-    def __init__(self, ownerId, text="", displays=[]):
+    def __init__(self, name, ownerId, text="", displays=[], ):
         self.ownerID = ownerId
         self.text = text
         self.displays = displays
-        self.upvoters = Set()
-        self.downvoters = Set()
-
+        self.upvoters = []
+        self.downvoters = []
+        self.name = name
+        self.upvote = 0
     def getOwnerID(self):
         return self.ownerID
 
@@ -28,20 +29,21 @@ class Story:
     def getDisplays(self):
         return self.displays
 
-    def addUpvote(self, user):
-        if self.ownerID == user.id:
-            print("One cannot", user.id, "vote for oneself.")
-        elif self.upvoters.__contains__(user.id) or self.downvoters.__contains__(user.id):
-            print("User:", user.id, "has already voted.")
+    def addUpvote(self, userID):
+        print self.ownerID, userID
+        if self.ownerID == userID:
+            print("One cannot", userID, "vote for oneself.")
+        elif self.upvoters.__contains__(userID) or self.downvoters.__contains__(userID):
+            print("User:", userID, "has already voted.")
         else:
             self.upvote += 1
-            self.upvoters.add(user.id)
+            self.upvoters.append(str(userID))
 
     def addDownvote(self, user):
-        if self.ownerID == user.id:
+        if self.ownerID == userID:
             print("One cannot vote for oneself.")
-        elif self.upvoters.__contains__(user.id) or self.downvoters.__contains__(user.id):
-            print("User:", user.id, "has already voted.")
+        elif self.upvoters.__contains__(userID) or self.downvoters.__contains__(userID):
+            print("User:", userID, "has already voted.")
         else:
             self.downvote += 1
-            self.downvoters.add(user.id)
+            self.downvoters.append(str(userID))

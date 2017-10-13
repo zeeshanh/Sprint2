@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 import socketio
 import eventlet
 import eventlet.wsgi
@@ -9,23 +9,43 @@ from flask_socketio import send, emit
 from threading import Thread
 from time import sleep
 import random
+import time
+import atexit
+from threading import Lock
+from flask import request
 
-stories = []
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.interval import IntervalTrigger
 
-#sio = socketio.AsyncServer(async_mode='aiohttp')
-#app = Flask(__name__)
-#sio.attach(app)
+import User
+import Story
+
+thread = None
+thread_lock = Lock()
+
+stories = {}
 poolMoney = 0
+timer = 50
+users = {}
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+def timerHelper():
+	global timer
+	while timer > 0:
+		timer-=1
+		socketio.emit("timerUpdate", timer)
+		socketio.sleep(1)
+	if timer==0:
+		winner = calculateWinner()
+		socketio.emit("winner", winner)
 
-
-@app.route("/")
-def hello():
-    return render_template('stories.html')
+@app.route("/<id>")
+def hello(id = 0):
+	return render_template('stories.html', uID = id)
 
 @app.route("/main")
 def main():
@@ -40,22 +60,37 @@ def connect():
     print("CONNECTEDD")
     global poolMoney
     emit("updatedMoney", poolMoney)
+    global timer
+    emit("timerUpdate", timer)
+    emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
+    global thread
+    with thread_lock:
+        if thread is None:
+        	temp = User.User(name="Zeeshan", balance = 500)
+        	users[temp.getID()] = temp
+        	tempS = Story.Story("first story", temp.getID(), "this is the first story", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
+        	stories[temp.getID()] = tempS
+        	thread = socketio.start_background_task(target=timerHelper)
 
 @socketio.on('myEvent')
 def handle_my_custom_event():
     print("New user connected!")
 
 
+
 @socketio.on('addStory')
 def connect(data):
-    stories.append(data)
+    #stories.append(data)
     print("New story", data)
-    socketio.emit('updateStories', stories)
+    stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
+    socketio.emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
+
 
 @socketio.on('newVote')
-def newVote(data):
-    print("New vote", data)
-    # socketio.emit('updateStories', stories)
+def newVote(uID, voterID):
+    story = stories[uID]
+    story.addUpvote(voterID)
+    socketio.emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
 
 @socketio.on('addUser')
 def connect(username):
@@ -63,29 +98,31 @@ def connect(username):
     userBal = random.randint(100,1000)
     global poolMoney
     poolMoney += userBal
-    emit("updatedMoney", poolMoney)
+    socketio.emit("updatedMoney", poolMoney)
+
+    #adding user to state
+    tempUser = User.User(name = username, balance = userBal)
+    users[tempUser.getID()] = tempUser
+    userID = tempUser.getID()
+    emit("registered", userID)
 
 
 def calculateWinner():
-	return "Lixuan"
+	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(stories.values()))
+	winUser = users[winStory.ownerID]
+	return winUser.getName()
 
-def countdown(t, *fun):
-    import time
-    print('This window will remain open for 3 more seconds...')
-    while t >= 0:
-        print(t)
-        time.sleep(1)
-        t -= 1
-    print('Goodbye! \n \n \n \n \n')
-    fun()
-    
-
-#thread = Thread(target = countdown, args = (5, ))
-#thread.start()
-#thread.join()
-#emit("gotWinner", calculateWinner())
-
-
+@app.after_request
+def add_header(r):
+    """
+    Add headers to both force latest IE rendering engine or Chrome Frame,
+    and also to cache the rendered page for 10 minutes.
+    """
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
 
 
 if __name__ == '__main__':

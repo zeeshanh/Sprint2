@@ -14,6 +14,12 @@ $(document).ready(function(){
                 alert(msg);
             });
 
+             socket.on("registered", function(msg){
+                var redirectUrl = "http://localhost:5000/"+msg;
+                console.log(redirectUrl);
+                window.location.replace(redirectUrl);
+             })
+
 
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
@@ -26,8 +32,7 @@ $(document).ready(function(){
                 }
                 console.log("here");
                 socket.emit('addUser', {val});
-                var redirectUrl = "http://localhost:5000";
-                window.location.replace(redirectUrl);
+                
             });
            
         });

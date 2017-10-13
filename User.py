@@ -13,7 +13,7 @@ class User:
         self.stories = stories
 
     def getID(self):
-        return self.id
+        return str(self.id)
 
     def getName(self):
         return self.name
