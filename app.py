@@ -32,14 +32,19 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 def timerHelper():
-	global timer
-	while timer > 0:
-		timer-=1
-		socketio.emit("timerUpdate", timer)
-		socketio.sleep(1)
-	if timer==0:
-		winner = calculateWinner()
-		socketio.emit("winner", winner)
+    global timer
+    global stories
+    while timer > 0:
+        timer-=1
+        socketio.emit("timerUpdate", timer)
+        socketio.sleep(1)
+        if timer==1:
+            winner = calculateWinner()
+            socketio.emit("winner", winner)
+            timer = 100
+            stories = {}
+            emit('newStories', stories)
+
 
 @app.route("/<id>")
 def hello(id = 0):
