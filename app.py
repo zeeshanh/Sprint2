@@ -3,6 +3,7 @@ import socketio
 import eventlet
 import eventlet.wsgi
 from flask_socketio import SocketIO
+from flask_socketio import send, emit
 
 
 #sio = socketio.AsyncServer(async_mode='aiohttp')
@@ -19,13 +20,18 @@ socketio = SocketIO(app)
 def hello():
     return render_template('index.html')
 
+@app.route("/main")
+def main():
+	return render_template('main.html')
+
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
+    emit('connect')
 
 @socketio.on('myEvent')
-def connect():
-    print("CONNECTEDD to my event")
+def handle_my_custom_event(json):
+    print('received json: ' + str(json))
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
