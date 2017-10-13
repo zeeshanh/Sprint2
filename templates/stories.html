@@ -3,6 +3,12 @@
   <title>Flaskr</title>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+
+  <link rel="stylesheet" href={{ url_for('static', filename='stories.css') }}>
   <script type="text/javascript" defer>
 
     // var socket = io.connect('https://' + document.domain + ':' + location.port);
@@ -16,15 +22,31 @@
 
     function createStory(story) {
 
-      var newListItem = document.createElement('div')
-      var title = document.createElement('h2')
-      var text = document.createElement('p')
+      var newListItem = document.createElement('li')
+      newListItem.classList.add("collection-item")
+      newListItem.classList.add("avatar")
+
       var image = createStoryImage(story.displays)
+
+      var title = document.createElement('span')
+      title.classList.add("title")
+
+      var text = document.createElement('p')
+
       var button = createVoteButton(story)
-      var numVotes = document.createElement('p')
+      button.classList.add("waves-effect")
+      button.classList.add("waves-light")
+      button.classList.add("btn")
+      button.classList.add("secondary-content")
+
+      var numVotes = document.createElement('span')
+      numVotes.classList.add("badge");
+      //numVotes.classList.add("numVotes")
+
       title.appendChild(document.createTextNode(story.name))
       text.appendChild(document.createTextNode(story.text))
       numVotes.appendChild(document.createTextNode(story.upvote))
+
       newListItem.appendChild(image)
       newListItem.appendChild(title)
       newListItem.appendChild(text)
@@ -36,25 +58,35 @@
 
     function createVoteButton(story) {
       var button = document.createElement('button')
-      button.innerText = 'vote'
+      button.classList.add("vote-button")
+      //button.innerText = 'vote'
       var voterID = $("#ownerID").html()
       button.addEventListener('click', emitVote.bind(this, story.ownerID, voterID))
+
+      icon= document.createElement("i");
+      icon.classList.add("material-icons")
+      icon.classList.add("medium")
+      icon.innerText = "thumb_up"
+
+      button.appendChild(icon)
       return button
     }
 
     function createStoryImage(imgSource) {
       var image = document.createElement('img')
+      image.classList.add("circle")
       image.src = imgSource
-      image.height = 100
-      image.weight = 100
+      //image.height = 100
+      //image.weight = 100
       return image
     }
 
     socket.on('updateStories', function(stories){
       console.log(stories);
       var storiesList = document.getElementById('storiesList')
-      var newList = document.createElement('div')
+      var newList = document.createElement('ul')
       newList.id = 'storiesList'
+      newList.classList.add("collection")
       stories.forEach(function(story){
         newList.appendChild(createStory(story))
       })
@@ -73,27 +105,76 @@
     })
 
     socket.on('winner', function(winner){
-      console.log('WINNER', winner)
-      alert(winner + ' wins!');
+      Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded')
     })
 
     window.onload = function(){
+
       document.getElementById("storyButton").addEventListener('click', function(event){
         var storyName = document.getElementById('storyName').value
         var storyText = document.getElementById('storyText').value
         var storyImage = document.getElementById('storyImage').value
+
+        if(storyImage==""){
+          storyImage = "http://www.abap-tutorials.com/wp-content/uploads/2011/09/placeholderf.jpg";
+        }
+
         var ownerID = $("#ownerID").html()
         console.log(ownerID)
         socket.emit('addStory', {storyName, ownerID,  storyText, storyImage})
       })
+
+      document.getElementById("viewForm").addEventListener('click', function(event){
+        $("#story_form").show();
+        $("#storyButton").show();
+        $("#viewForm").hide();
+        $("#cancelButton").show()
+
+      })
+
+      document.getElementById("cancelButton").addEventListener('click', function(event){
+        $("#story_form").hide();
+        $("#storyButton").hide();
+        $("#viewForm").show();
+        $("#cancelButton").hide()
+
+      })
     }
+
+    $(document).ready(function(){
+        $("#story_form").hide();
+        $("#storyButton").hide();
+        $("#cancelButton").hide()
+        $("#ownerID").hide();
+    });
+
+    /* ---- particles.js config ---- */
+
+
   </script>
+
+
 </head>
 <body>
-  <div class=page>
+  <div id="particles-js"></div>
+  <div class="page">
+
     <div id = "ownerID">{{uID}}</div>
-    <div id = "timer">Dummy</div>
-    <div id = "money">Test</div>
+    <nav>
+    <div class="nav-wrapper">
+      <a href="#" class="brand-logo left">Golden Days</a>
+      <ul id="nav-mobile" class="right ">
+        <li class = "timerWrapper"><i class ="time-icon medium material-icons">access_time</i></li>
+        <li id = "timer"></li>
+        <li class = "moneyWrapper"> <i class ="money-icon medium material-icons">attach_money</i></li>
+        <li id = "money"</li>
+      </ul>
+    </div>
+  </nav>
+  </div>
+    <br>
+    <br>
+    <button id="viewForm" class = "waves-effect waves-light btn" type="button" name="button">Add Story</button>
     <form id="story_form">
       Story Title:<br>
       <input id="storyName" type="text" name="name"><br>
@@ -102,8 +183,9 @@
       <br>Image URL (optional):<br>
       <input id="storyImage" type="text" name="image">
     </form>
-    <button id="storyButton" type="button" name="button">Add Story</button>
-    <ul id='storiesList'>
+    <button id="storyButton" class = "waves-effect waves-light btn" type="submit" name="button">Submit</button>
+      <button id = "cancelButton" class = "waves-effect waves-light btn">Cancel</button>
+    <ul class = "collection" id='storiesList'>
 
     </ul>
   </div>
