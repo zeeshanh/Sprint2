@@ -42,7 +42,8 @@ def timerHelper():
             timer = 100
             socketio.emit("timerUpdate", timer)
             stories = {}
-            socketio.emit('updateStories', list(reversed(stories)))
+			newStories = [x.__dict__ for x in list(stories.values())]
+            socketio.emit('updateStories', list(reversed(newStories)))
             winner = calculateWinner()
             socketio.emit("winner", winner)
 
