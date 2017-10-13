@@ -5,7 +5,8 @@
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <script type="text/javascript" defer>
 
-    var socket = io.connect('https://' + document.domain + ':' + location.port);
+    // var socket = io.connect('https://' + document.domain + ':' + location.port);
+    var socket = io.connect(window.location.hostname);
     socket.emit('myEvent')
 
     function emitVote(storyID, voterID){
