@@ -8,6 +8,7 @@ from threading import Thread
 from time import sleep
 
 
+stories = []
 
 #sio = socketio.AsyncServer(async_mode='aiohttp')
 #app = Flask(__name__)
@@ -25,7 +26,7 @@ socketio = SocketIO(app)
 
 @app.route("/")
 def hello():
-    return render_template('index.html')
+    return render_template('stories.html')
 
 @app.route("/main")
 def main():
@@ -41,7 +42,14 @@ def handle_my_custom_event():
 
 @socketio.on('addStory')
 def connect(data):
+    stories.append(data)
     print("New story", data)
+    socketio.emit('updateStories', stories)
+
+@socketio.on('newVote')
+def newVote(data):
+    print("New vote", data)
+    # socketio.emit('updateStories', stories)
 
 @socketio.on('addUser')
 def connect(data):

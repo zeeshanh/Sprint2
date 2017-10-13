@@ -1,0 +1,78 @@
+<!doctype html>
+<head>
+  <title>Flaskr</title>
+  <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+  <script type="text/javascript" defer>
+    var socket = io.connect('http://' + document.domain + ':' + location.port);
+    socket.emit('myEvent')
+
+    function emitVote(story){
+      socket.emit('newVote', story)
+    }
+
+    function createStory(story) {
+      var newListItem = document.createElement('div')
+      var title = document.createElement('h2')
+      var text = document.createElement('p')
+      var image = createStoryImage(story.storyImage)
+      var button = createVoteButton(story)
+      title.appendChild(document.createTextNode(story.storyName))
+      text.appendChild(document.createTextNode(story.storyText))
+      newListItem.appendChild(image)
+      newListItem.appendChild(title)
+      newListItem.appendChild(text)
+      newListItem.appendChild(button)
+      return newListItem
+    }
+
+    function createVoteButton(story) {
+      var button = document.createElement('button')
+      button.innerText = 'vote'
+      button.addEventListener('click', emitVote.bind(this, story))
+      return button
+    }
+
+    function createStoryImage(imgSource) {
+      var image = document.createElement('img')
+      image.src = imgSource
+      image.height = 100
+      image.weight = 100
+      return image
+    }
+
+    socket.on('updateStories', function(stories){
+      var storiesList = document.getElementById('storiesList')
+      var newList = document.createElement('div')
+      newList.id = 'storiesList'
+      stories.forEach(function(story){
+        newList.appendChild(createStory(story))
+      })
+      storiesList.replaceWith(newList)
+    })
+
+    window.onload = function(){
+      document.getElementById("storyButton").addEventListener('click', function(event){
+        var storyName = document.getElementById('storyName').value
+        var storyText = document.getElementById('storyText').value
+        var storyImage = document.getElementById('storyImage').value
+        socket.emit('addStory', {storyName, storyText, storyImage})
+      })
+    }
+  </script>
+</head>
+<body>
+  <div class=page>
+    <button id="storyButton" type="button" name="button">Add Story</button>
+    <form id="story_form">
+      Name:<br>
+      <input id="storyName" type="text" name="name"><br>
+      Story:<br>
+      <textarea id="storyText" name="story" form="story_form">Enter text here...</textarea>
+      <br>Image URL:<br>
+      <input id="storyImage" type="text" name="image">
+    </form>
+    <ul id='storiesList'>
+
+    </ul>
+  </div>
+</body>
