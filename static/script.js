@@ -1,6 +1,6 @@
 $(document).ready(function(){
             // var socket = io.connect('https://' + document.domain + ':' + location.port);
-            var socket = io.connect(window.location.hostname);
+            var socket = io();
             socket.on('connect', function() {
                 socket.emit('myEvent');
                 console.log("Emitted");
