@@ -105,6 +105,7 @@
     })
 
     socket.on('newUser', function(users){
+      console.log(users)
       var usersStr = ''
       users.forEach(function(user){
         usersStr += user + ', '
