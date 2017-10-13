@@ -16,7 +16,7 @@ $(document).ready(function(){
             });
 
              socket.on("registered", function(msg){
-                var redirectUrl = "http://localhost:5000/"+msg;
+                var redirectUrl = "http:" + document.domain +msg;
                 console.log(redirectUrl);
                 window.location.replace(redirectUrl);
              })
