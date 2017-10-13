@@ -89,7 +89,7 @@ def handle_my_custom_event():
 def connect(data):
     #stories.append(data)
     print("New story", data)
-    if data.ownerID not in users:
+    if data["ownerID"] not in users:
     	return
     stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
     newStories = [x.__dict__ for x in list(stories.values())]
