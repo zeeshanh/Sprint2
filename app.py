@@ -3,6 +3,7 @@ import socketio
 import eventlet
 import eventlet.wsgi
 from flask_socketio import SocketIO
+from flask_socketio import send, emit
 
 stories = []
 
@@ -18,8 +19,16 @@ socketio = SocketIO(app)
 def hello():
     return render_template('stories.html')
 
+@app.route("/main")
+def main():
+	return render_template('main.html')
+
 @socketio.on('connect')
 def connect():
+    print("CONNECTEDD")
+
+@socketio.on('myEvent')
+def handle_my_custom_event():
     print("New user connected!")
 
 @socketio.on('addStory')
@@ -32,6 +41,10 @@ def connect(data):
 def newVote(data):
     print("New vote", data)
     # socketio.emit('updateStories', stories)
+
+@socketio.on('addUser')
+def connect(data):
+    print("Username joined:", data)
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
