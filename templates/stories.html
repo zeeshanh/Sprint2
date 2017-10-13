@@ -16,6 +16,8 @@
         var newListItem = document.createElement('div')
         var title = document.createElement('h2')
         var text = document.createElement('p')
+        var button = document.createElement('button')
+        button.innerText = 'vote'
         title.appendChild(document.createTextNode(story.storyName))
         text.appendChild(document.createTextNode(story.storyText))
         var image = document.createElement('img')
@@ -25,6 +27,7 @@
         newListItem.appendChild(image)
         newListItem.appendChild(title)
         newListItem.appendChild(text)
+        newListItem.appendChild(button)
         newList.appendChild(newListItem)
       })
       storiesList.replaceWith(newList)
