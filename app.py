@@ -32,18 +32,14 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 def timerHelper():
-    global timer
-    global stories
-    while timer > 0:
-        timer-=1
-        socketio.emit("timerUpdate", timer)
-        socketio.sleep(1)
-        if timer==1:
-            winner = calculateWinner()
-            socketio.emit("winner", winner)
-            timer = 100
-            stories = {}
-			socketio.emit('updateStories', stories)
+	global timer
+	while timer > 0:
+		timer-=1
+		socketio.emit("timerUpdate", timer)
+		socketio.sleep(1)
+	if timer==0:
+		winner = calculateWinner()
+		socketio.emit("winner", winner)
 
 @app.route("/<id>")
 def hello(id = 0):
@@ -51,16 +47,16 @@ def hello(id = 0):
 
 @app.route("/main")
 def main():
-	return render_template('stories.html')
+	return render_template('main.html')
 
-@app.route("/")
+@app.route("/index")
 def index():
 	return render_template('index.html')
 
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
-    newStories = [x.__dict__ for x in reversed(list(stories.values()))]
+    newStories = [x.__dict__ for x in list(stories.values())]
     global poolMoney
     emit("updatedMoney", poolMoney)
     global timer
