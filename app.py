@@ -40,7 +40,7 @@ def timerHelper():
         socketio.sleep(1)
         if timer==1:
             winner = calculateWinner()
-            socketio.emit("gotWinner", winner)
+            socketio.emit("winner", winner)
             timer = 100
             socketio.emit("timerUpdate", timer)
             stories = {}

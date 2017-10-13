@@ -11,10 +11,6 @@ $(document).ready(function(){
             socket.on('my response', function(msg) {
                 $('#log').append('<br>Received: ' + msg.data);
             });
-             socket.on('gotWinner', function(msg) {
-               console.log('winner msg', msg)
-                alert(msg);
-            });
 
              socket.on("registered", function(msg){
                 var redirectUrl = "https://" + window.location.hostname + '/' + msg;
