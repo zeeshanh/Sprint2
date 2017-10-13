@@ -14,7 +14,7 @@ $(document).ready(function(){
              socket.on('gotWinner', function(msg) {
                console.log('winner msg', msg)
                 alert(msg);
-                return false;
+                location.reload()
             });
 
              socket.on("registered", function(msg){
