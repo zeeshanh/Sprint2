@@ -16,7 +16,7 @@ socketio = SocketIO(app)
 
 @app.route("/")
 def hello():
-    return render_template('main.html')
+    return render_template('index.html')
 
 @app.route("/main")
 def main():
@@ -25,16 +25,18 @@ def main():
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
-    emit('connect')
 
 @socketio.on('myEvent')
-def handle_my_custom_event(json):
-    print('received json: ' + str(json))
+def handle_my_custom_event():
     print("New user connected!")
 
 @socketio.on('addStory')
 def connect(data):
     print("New story", data)
+
+@socketio.on('addUser')
+def connect(data):
+    print("Username joined:", data)
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware

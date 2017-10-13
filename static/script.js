@@ -1,8 +1,7 @@
 $(document).ready(function(){
-            namespace = '/test';
-            var socket = io.connect('http://' + document.domain + ':' + location.port + namespace);
+            var socket = io.connect('http://' + document.domain + ':' + location.port);
             socket.on('connect', function() {
-                socket.emit('myEvent', {data: 'I\'m connected!'});
+                socket.emit('myEvent');
                 console.log("Emitted");
             });
             socket.on('disconnect', function() {
@@ -11,6 +10,7 @@ $(document).ready(function(){
             socket.on('my response', function(msg) {
                 $('#log').append('<br>Received: ' + msg.data);
             });
+
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
             // handlers for the different forms in the page
@@ -21,7 +21,7 @@ $(document).ready(function(){
                     return;
                 }
                 console.log("here");
-                socket.emit('addUser', {data: $('#username').val()});
+                socket.emit('addUser', {val});
                 var redirectUrl = "http://localhost:5000/main";
                 window.location.replace(redirectUrl);
             });
