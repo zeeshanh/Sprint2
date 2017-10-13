@@ -68,6 +68,8 @@ def connect():
     global timer
     emit("timerUpdate", timer)
     emit('updateStories', list(reversed(newStories)))
+    allUsers = [x.getName() for x in users.values()]
+    socketio.emit("newUser", allUsers)
     global thread
     with thread_lock:
         if thread is None:
