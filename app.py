@@ -3,21 +3,19 @@ import socketio
 import eventlet
 import eventlet.wsgi
 from flask_socketio import SocketIO
-<<<<<<< HEAD
 import json
 
-# sio = socketio.AsyncServer(async_mode='aiohttp')
-# app = Flask(__name__)
-# sio.attach(app)
-=======
 from flask_socketio import send, emit
+from threading import Thread
+from time import sleep
+
 
 stories = []
 
 #sio = socketio.AsyncServer(async_mode='aiohttp')
 #app = Flask(__name__)
 #sio.attach(app)
->>>>>>> 327400b654c899645fc87d765813ed78299b4cd7
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
@@ -34,6 +32,9 @@ def hello():
 def main():
 	return render_template('main.html')
 
+@app.route("/index")
+def index():
+	return render_template('index.html')
 
 @socketio.on('connect')
 def connect():
@@ -47,8 +48,6 @@ def handle_my_custom_event():
 @socketio.on('addStory')
 def connect(data):
     stories.append(data)
-<<<<<<< HEAD
-=======
     print("New story", data)
     socketio.emit('updateStories', stories)
 
@@ -60,7 +59,28 @@ def newVote(data):
 @socketio.on('addUser')
 def connect(data):
     print("Username joined:", data)
->>>>>>> 327400b654c899645fc87d765813ed78299b4cd7
+
+def calculateWinner():
+	return "Lixuan"
+
+def countdown(t, *fun):
+    import time
+    print('This window will remain open for 3 more seconds...')
+    while t >= 0:
+        print(t)
+        time.sleep(1)
+        t -= 1
+    print('Goodbye! \n \n \n \n \n')
+    fun()
+    
+
+#thread = Thread(target = countdown, args = (5, ))
+#thread.start()
+#thread.join()
+#emit("gotWinner", calculateWinner())
+
+
+
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
@@ -68,3 +88,5 @@ if __name__ == '__main__':
     # deploy as an eventlet WSGI server
     # eventlet.wsgi.server(eventlet.listen  p)
     socketio.run(app)
+
+
