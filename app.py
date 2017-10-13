@@ -20,10 +20,6 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-
-
-
-
 @app.route("/")
 def hello():
     return render_template('stories.html')
@@ -31,6 +27,10 @@ def hello():
 @app.route("/main")
 def main():
 	return render_template('main.html')
+
+@app.route("/index")
+def index():
+	return render_template('index.html')
 
 @socketio.on('connect')
 def connect():
