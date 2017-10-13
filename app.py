@@ -97,11 +97,11 @@ def connect(username):
     print("Username joined:", username)
     userBal = random.randint(100,1000)
     global poolMoney
-    poolMoney += userBal
+    poolMoney += 100
     socketio.emit("updatedMoney", poolMoney)
 
     #adding user to state
-    tempUser = User.User(name = username, balance = userBal)
+    tempUser = User.User(name = username, balance = userBal-100)
     users[tempUser.getID()] = tempUser
     userID = tempUser.getID()
     emit("registered", userID)
