@@ -26,7 +26,7 @@ $(document).ready(function(){
                 }
                 console.log("here");
                 socket.emit('addUser', {val});
-                var redirectUrl = "http://localhost:5000/main";
+                var redirectUrl = "http://localhost:5000";
                 window.location.replace(redirectUrl);
             });
            

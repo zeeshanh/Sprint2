@@ -53,6 +53,8 @@
     })
 
     socket.on('updatedMoney', function(money){
+      console.log("updated money")
+      console.log(money)
       $("#money").html(money);
     })
 

@@ -15,14 +15,13 @@ stories = []
 #sio = socketio.AsyncServer(async_mode='aiohttp')
 #app = Flask(__name__)
 #sio.attach(app)
-
+poolMoney = 0
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
-stories = []
-poolMoney = 0
+
 
 @app.route("/")
 def hello():
@@ -39,6 +38,7 @@ def index():
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
+    global poolMoney
     emit("updatedMoney", poolMoney)
 
 @socketio.on('myEvent')
@@ -58,9 +58,10 @@ def newVote(data):
     # socketio.emit('updateStories', stories)
 
 @socketio.on('addUser')
-def connect(data):
+def connect(username):
     print("Username joined:", username)
     userBal = random.randint(100,1000)
+    global poolMoney
     poolMoney += userBal
     emit("updatedMoney", poolMoney)
 
