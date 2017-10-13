@@ -13,7 +13,8 @@ $(document).ready(function(){
             });
              socket.on('gotWinner', function(msg) {
                console.log('winner msg', msg)
-                confirm(msg);
+                alert(msg);
+                return false;
             });
 
              socket.on("registered", function(msg){
