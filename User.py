@@ -28,8 +28,8 @@ class User:
         try:
             self.balance += inmoney
             return True
-        except Exception, e:
-            print e
+        except(Exception, e):
+            print(e)
             return False
 
     def removeBalance(self, outmoney):
@@ -39,14 +39,14 @@ class User:
             else:
                 self.balance -= outmoney
                 return True
-        except Exception, e:
-            print e
+        except(Exception, e):
+            print(e)
             return False
 
     def addStory(self, story):
         try:
             self.stories.append(story)
             return True
-        except Exception, e:
-            print e
+        except(Exception, e):
+            print(e)
             return False

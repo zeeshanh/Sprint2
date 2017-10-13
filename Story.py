@@ -1,13 +1,10 @@
-from sets import Set
-
-
 class Story:
     ownerID = ""
     text = ""
     displays = []
 
-    upvoters = Set()
-    downvoters = Set()
+    upvoters = set()
+    downvoters = set()
 
     def __init__(self, name, ownerId, text="", displays=[], ):
         self.ownerID = ownerId
@@ -30,7 +27,7 @@ class Story:
         return self.displays
 
     def addUpvote(self, userID):
-        print self.ownerID, userID
+        print(self.ownerID, userID)
         if self.ownerID == userID:
             print("One cannot", userID, "vote for oneself.")
         elif self.upvoters.__contains__(userID) or self.downvoters.__contains__(userID):

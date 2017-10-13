@@ -13,9 +13,7 @@ import time
 import atexit
 from threading import Lock
 from flask import request
-
-from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.interval import IntervalTrigger
+from functools import reduce
 
 import User
 import Story
@@ -58,11 +56,12 @@ def index():
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
+    newStories = [x.__dict__ for x in list(stories.values())]
     global poolMoney
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
-    emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
+    emit('updateStories', newStories)
     global thread
     with thread_lock:
         if thread is None:
@@ -83,14 +82,16 @@ def connect(data):
     #stories.append(data)
     print("New story", data)
     stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
-    socketio.emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
+    newStories = [x.__dict__ for x in list(stories.values())]
+    socketio.emit('updateStories', newStories)
 
 
 @socketio.on('newVote')
 def newVote(uID, voterID):
     story = stories[uID]
     story.addUpvote(voterID)
-    socketio.emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
+    newStories = [x.__dict__ for x in list(stories.values())]
+    socketio.emit('updateStories', newStories)
 
 @socketio.on('addUser')
 def connect(username):
@@ -131,5 +132,3 @@ if __name__ == '__main__':
     # deploy as an eventlet WSGI server
     # eventlet.wsgi.server(eventlet.listen  p)
     socketio.run(app)
-
-
