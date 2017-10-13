@@ -42,7 +42,7 @@ def timerHelper():
             winner = calculateWinner()
             emit("gotWinner", winner)
             timer = 100
-			socketio.emit("timerUpdate", timer)
+            socketio.emit("timerUpdate", timer)
             stories = {}
             emit('updateStories', list(reversed(stories)))
 
@@ -67,7 +67,7 @@ def connect():
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
-    emit('updateStories', newStories)
+    emit('updateStories', list(reversed(newStories)))
     global thread
     with thread_lock:
         if thread is None:
