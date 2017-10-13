@@ -4,6 +4,7 @@ import eventlet
 import eventlet.wsgi
 from flask_socketio import SocketIO
 
+stories = []
 
 #sio = socketio.AsyncServer(async_mode='aiohttp')
 #app = Flask(__name__)
@@ -23,7 +24,9 @@ def connect():
 
 @socketio.on('addStory')
 def connect(data):
+    stories.append(data)
     print("New story", data)
+    socketio.emit('updateStories', stories)
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware

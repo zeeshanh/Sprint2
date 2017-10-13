@@ -8,6 +8,28 @@
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('myEvent')
 
+    socket.on('updateStories', function(stories){
+      var storiesList = document.getElementById('storiesList')
+      var newList = document.createElement('div')
+      newList.id = 'storiesList'
+      stories.forEach(function(story){
+        var newListItem = document.createElement('div')
+        var title = document.createElement('h2')
+        var text = document.createElement('p')
+        title.appendChild(document.createTextNode(story.storyName))
+        text.appendChild(document.createTextNode(story.storyText))
+        var image = document.createElement('img')
+        image.src = story.storyImage
+        image.height = 100
+        image.weight = 100
+        newListItem.appendChild(image)
+        newListItem.appendChild(title)
+        newListItem.appendChild(text)
+        newList.appendChild(newListItem)
+      })
+      storiesList.replaceWith(newList)
+    })
+
     window.onload = function(){
       document.getElementById("storyButton").addEventListener('click', function(event){
         var storyName = document.getElementById('storyName').value
@@ -29,5 +51,8 @@
       <br>Image URL:<br>
       <input id="storyImage" type="text" name="image">
     </form>
+    <ul id='storiesList'>
+
+    </ul>
   </div>
 </body>
