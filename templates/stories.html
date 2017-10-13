@@ -2,7 +2,9 @@
 <head>
   <title>Flaskr</title>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
+  <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <script type="text/javascript" defer>
+
     var socket = io.connect('http://' + document.domain + ':' + location.port);
     socket.emit('myEvent')
 
@@ -50,6 +52,10 @@
       storiesList.replaceWith(newList)
     })
 
+    socket.on('updatedMoney', function(money){
+      $("#money").html(money);
+    })
+
     window.onload = function(){
       document.getElementById("storyButton").addEventListener('click', function(event){
         var storyName = document.getElementById('storyName').value
@@ -62,6 +68,7 @@
 </head>
 <body>
   <div class=page>
+    <div id = "money">Test</div>
     <button id="storyButton" type="button" name="button">Add Story</button>
     <form id="story_form">
       Name:<br>

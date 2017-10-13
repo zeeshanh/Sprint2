@@ -8,7 +8,7 @@ import json
 from flask_socketio import send, emit
 from threading import Thread
 from time import sleep
-
+import random
 
 stories = []
 
@@ -22,7 +22,7 @@ app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
 stories = []
-
+poolMoney = 0
 
 @app.route("/")
 def hello():
@@ -39,6 +39,7 @@ def index():
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
+    emit("updatedMoney", poolMoney)
 
 @socketio.on('myEvent')
 def handle_my_custom_event():
@@ -58,7 +59,11 @@ def newVote(data):
 
 @socketio.on('addUser')
 def connect(data):
-    print("Username joined:", data)
+    print("Username joined:", username)
+    userBal = random.randint(100,1000)
+    poolMoney += userBal
+    emit("updatedMoney", poolMoney)
+
 
 def calculateWinner():
 	return "Lixuan"
