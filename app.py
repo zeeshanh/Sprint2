@@ -43,6 +43,7 @@ def timerHelper():
             socketio.emit("winner", winner)
             timer = 100
             stories = {}
+			emit('updateStories', stories)
 
 @app.route("/<id>")
 def hello(id = 0):

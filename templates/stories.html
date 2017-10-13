@@ -73,7 +73,7 @@
     })
 
     socket.on('winner', function(winner){
-      alert(winner);
+      alert(winner + ' wins!');
     })
 
     window.onload = function(){
@@ -93,15 +93,15 @@
     <div id = "ownerID">{{uID}}</div>
     <div id = "timer">Dummy</div>
     <div id = "money">Test</div>
-    <button id="storyButton" type="button" name="button">Add Story</button>
     <form id="story_form">
-      Name:<br>
+      Title:<br>
       <input id="storyName" type="text" name="name"><br>
-      Story:<br>
-      <textarea id="storyText" name="story" form="story_form">Enter text here...</textarea>
+      What do you want to do with the money?:<br>
+      <textarea id="storyText" name="story" form="story_form"></textarea>
       <br>Image URL:<br>
       <input id="storyImage" type="text" name="image">
     </form>
+    <button id="storyButton" type="button" name="button">Add Story</button>
     <ul id='storiesList'>
 
     </ul>
