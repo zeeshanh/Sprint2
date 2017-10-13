@@ -100,7 +100,7 @@
     })
 
     socket.on('timerUpdate', function(time){
-      $("#timer").html(time);
+      $("#timer").html(time + " seconds");
       console.log("updating timer");
     })
 
@@ -115,7 +115,7 @@
     })
 
     socket.on('winner', function(winner){
-      Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded')
+      Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded') 
     })
 
     window.onload = function(){
@@ -171,13 +171,14 @@
 
     <div id = "ownerID">{{uID}}</div>
     <nav>
+
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo left">Golden Days</a>
+      <a href="#" class="brand-logo left hide-on-down">Golden Days</a>
       <ul id="nav-mobile" class="right ">
-        <li class = "timerWrapper"><i class ="time-icon medium material-icons">access_time</i></li>
-        <li id = "timer"></li>
-        <li class = "moneyWrapper"> <i class ="money-icon medium material-icons">attach_money</i></li>
-        <li id = "money"</li>
+        <li class = "timerWrapper"><i class ="time-icon large material-icons">access_time</i></li>
+        <li id = "timer" class = "btn-large"></li>
+        <li class = "moneyWrapper"> <i class ="money-icon large material-icons">attach_money</i></li>
+        <li id = "money" class = "btn-large"</li>
       </ul>
     </div>
   </nav>
