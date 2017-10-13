@@ -43,7 +43,7 @@ def timerHelper():
             socketio.emit("winner", winner)
             timer = 100
             stories = {}
-			emit('updateStories', stories)
+			socketio.emit('updateStories', stories)
 
 @app.route("/<id>")
 def hello(id = 0):
@@ -53,7 +53,7 @@ def hello(id = 0):
 def main():
 	return render_template('stories.html')
 
-@app.route("/index")
+@app.route("/")
 def index():
 	return render_template('index.html')
 
