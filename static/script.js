@@ -10,6 +10,10 @@ $(document).ready(function(){
             socket.on('my response', function(msg) {
                 $('#log').append('<br>Received: ' + msg.data);
             });
+             socket.on('gotWinner', function(msg) {
+                alert(msg);
+            });
+
 
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
