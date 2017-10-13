@@ -3,6 +3,8 @@ import socketio
 import eventlet
 import eventlet.wsgi
 from flask_socketio import SocketIO
+import json
+
 from flask_socketio import send, emit
 from threading import Thread
 from time import sleep
@@ -15,10 +17,12 @@ stories = []
 #sio.attach(app)
 
 
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
+
+stories = []
+
 
 @app.route("/")
 def hello():
@@ -39,6 +43,7 @@ def connect():
 @socketio.on('myEvent')
 def handle_my_custom_event():
     print("New user connected!")
+
 
 @socketio.on('addStory')
 def connect(data):
@@ -79,9 +84,9 @@ def countdown(t, *fun):
 
 if __name__ == '__main__':
     # wrap Flask application with engineio's middleware
-    #app = socketio.Middleware(sio, app)
+    # app = socketio.Middleware(sio, app)
     # deploy as an eventlet WSGI server
-    #eventlet.wsgi.server(eventlet.listen(('', 8000)), app)
+    # eventlet.wsgi.server(eventlet.listen  p)
     socketio.run(app)
 
 
