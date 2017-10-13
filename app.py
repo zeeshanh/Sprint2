@@ -23,7 +23,7 @@ thread_lock = Lock()
 
 stories = {}
 poolMoney = 0
-timer = 150
+timer = 180
 users = {}
 
 
@@ -41,7 +41,7 @@ def timerHelper():
         if timer==1:
             winner = calculateWinner()
             socketio.emit("winner", winner)
-            timer = 100
+            timer = 180
             socketio.emit("timerUpdate", timer)
             stories = {}
             socketio.emit('updateStories', [])
