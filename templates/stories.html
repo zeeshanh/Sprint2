@@ -105,11 +105,12 @@
     })
 
     socket.on('newUser', function(users){
-      usersStr = ''
-      for user in users:
+      var usersStr = ''
+      users.forEach(function(user){
         usersStr += str(user)
-      $("#users").html(usersStr);
-      console.log("updating users");
+        $("#users").html(usersStr);
+        console.log("updating users");
+      })
     })
 
     socket.on('winner', function(winner){
