@@ -25,7 +25,7 @@ thread_lock = Lock()
 
 stories = {}
 poolMoney = 0
-timer = 100
+timer = 150
 users = {}
 
 
@@ -36,6 +36,7 @@ socketio = SocketIO(app)
 def timerHelper():
 	global timer
 	global stories
+	global users
 	while timer > 0:
 		timer-=1
 		socketio.emit("timerUpdate", timer)
@@ -43,9 +44,8 @@ def timerHelper():
 		if timer==1:
 			winner = calculateWinner()
 			socketio.emit("winner", winner)
-			timer = 100
+			timer = 150
 			stories = {}
-
 
 @app.route("/<id>")
 def hello(id = 0):
@@ -63,6 +63,7 @@ def index():
 def connect():
     print("CONNECTEDD")
     global poolMoney
+    global stories
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
@@ -70,11 +71,13 @@ def connect():
     global thread
     with thread_lock:
         if thread is None:
-        	temp = User.User(name="Zeeshan", balance = 500)
-        	users[temp.getID()] = temp
-        	tempS = Story.Story("first story", temp.getID(), "this is the first story", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
-        	stories[temp.getID()] = tempS
         	thread = socketio.start_background_task(target=timerHelper)
+
+    if stories =={}:
+    	temp = User.User(name="Zeeshan", balance = 500)
+        users[temp.getID()] = temp
+        tempS = Story.Story("College books", temp.getID(), "I need to buy books for college", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
+        stories[temp.getID()] = tempS
 
 @socketio.on('myEvent')
 def handle_my_custom_event():
@@ -86,6 +89,8 @@ def handle_my_custom_event():
 def connect(data):
     #stories.append(data)
     print("New story", data)
+    if data.ownerID not in users:
+    	return
     stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
     socketio.emit('updateStories', map(lambda x:x.__dict__, list(stories.values())))
 
@@ -112,6 +117,8 @@ def connect(username):
 
 
 def calculateWinner():
+	if len(stories)==0 or len(users)==0:
+		return "No one "
 	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(stories.values()))
 	winUser = users[winStory.ownerID]
 	return winUser.getName()
