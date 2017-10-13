@@ -43,7 +43,7 @@ def timerHelper():
             socketio.emit("winner", winner)
             timer = 100
             stories = {}
-            emit('newStories', stories)
+            emit('updateStories', stories)
 
 
 @app.route("/<id>")
@@ -88,7 +88,7 @@ def connect(data):
     print("New story", data)
     stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
     newStories = [x.__dict__ for x in list(stories.values())]
-    socketio.emit('updateStories', newStories)
+    socketio.emit('updateStories', reversed(newStories))
 
 
 @socketio.on('newVote')
@@ -96,7 +96,7 @@ def newVote(uID, voterID):
     story = stories[uID]
     story.addUpvote(voterID)
     newStories = [x.__dict__ for x in list(stories.values())]
-    socketio.emit('updateStories', newStories)
+    socketio.emit('updateStories', reversed(newStories)) 
 
 @socketio.on('addUser')
 def connect(username):
