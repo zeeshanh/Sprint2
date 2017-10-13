@@ -104,6 +104,14 @@
       console.log("updating timer");
     })
 
+    socket.on('newUser', function(users){
+      usersStr = ''
+      for user in users:
+        usersStr += str(user)
+      $("#users").html(usersStr);
+      console.log("updating users");
+    })
+
     socket.on('winner', function(winner){
       Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded')
     })
@@ -173,6 +181,7 @@
   </nav>
   </div>
     <br>
+    <p id='users'>Members: </p>
     <br>
     <button id="viewForm" class = "waves-effect waves-light btn" type="button" name="button">Add Story</button>
     <form id="story_form">
