@@ -107,7 +107,7 @@
     socket.on('newUser', function(users){
       var usersStr = ''
       users.forEach(function(user){
-        usersStr += str(user)
+        usersStr += user + ', '
         $("#users").html(usersStr);
         console.log("updating users");
       })
