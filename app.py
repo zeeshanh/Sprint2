@@ -23,7 +23,7 @@ thread_lock = Lock()
 
 stories = {}
 poolMoney = 0
-timer = 50
+timer = 30
 users = {}
 
 
@@ -43,8 +43,8 @@ def timerHelper():
             socketio.emit("timerUpdate", timer)
             stories = {}
             socketio.emit('updateStories', list(reversed(stories)))
-			winner = calculateWinner()
-			socketio.emit("winner", winner)
+            winner = calculateWinner()
+            socketio.emit("winner", winner)
 
 
 @app.route("/<id>")
