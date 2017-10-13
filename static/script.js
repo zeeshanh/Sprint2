@@ -12,7 +12,8 @@ $(document).ready(function(){
                 $('#log').append('<br>Received: ' + msg.data);
             });
              socket.on('gotWinner', function(msg) {
-                alert(msg);
+               console.log('winner msg', msg)
+                confirm(msg);
             });
 
              socket.on("registered", function(msg){
