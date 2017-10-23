@@ -1,4 +1,18 @@
-body {
-  padding-left:40px;
-  padding-right:40px;
+
+
+.vote-button{
+  float:left;
+}
+
+#header{
+  height:30%;
+}
+
+.numVotes{
+  color: none;
+}
+
+body{
+	padding-left:40px;
+	padding-right:40px;
 }
