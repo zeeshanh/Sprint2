@@ -108,19 +108,20 @@ def newVote(uID, voterID):
 @socketio.on('addUser')
 def connect(username):
     print("Username joined:", username)
-    userBal = random.randint(100,1000)
-    global poolMoney
-    poolMoney += 100
-    socketio.emit("updatedMoney", poolMoney)
+    print (username['pass'])
+    # userBal = random.randint(100,1000)
+    # global poolMoney
+    # poolMoney += 100
+    # socketio.emit("updatedMoney", poolMoney)
 
-    #adding user to state
-    tempUser = User.User(name = username['val'], balance = userBal-100)
-    users[tempUser.getID()] = tempUser
-    userID = tempUser.getID()
-    emit("registered", userID)
-    print('USERS', users)
-    allUsers = [x.getName() for x in users.values()]
-    socketio.emit("newUser", allUsers)
+    # #adding user to state
+    # tempUser = User.User(name = username['val'], balance = userBal-100)
+    # users[tempUser.getID()] = tempUser
+    # userID = tempUser.getID()
+    # emit("registered", userID)
+    # print('USERS', users)
+    # allUsers = [x.getName() for x in users.values()]
+    # socketio.emit("newUser", allUsers)
 
 
 def calculateWinner():

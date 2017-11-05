@@ -1,4 +1,7 @@
 $(document).ready(function(){
+
+            $(".signup-form").hide();
+
             // var socket = io.connect('https://' + document.domain + ':' + location.port);
             var socket = io();
             socket.on('connect', function() {
@@ -13,6 +16,13 @@ $(document).ready(function(){
             });
 
              socket.on("registered", function(msg){
+                if (msg == "taken"){
+                    Materialize.toast("This username is already in use", 4000, 'rounded');
+                }
+
+                if (msg == ""){
+                    Materialize.toast("Your username or password was wrong", 4000, 'rounded');
+                }
                 var redirectUrl = "https://" + window.location.hostname + '/' + msg;
                 console.log(redirectUrl);
                 window.location.replace(redirectUrl);
@@ -24,12 +34,43 @@ $(document).ready(function(){
             // handlers for the different forms in the page
             // these send data to the server in a variety of ways
             $('.login-button').click(function(event) {
-                var val = $("#username").val();
-                if(val == ""){
+                var uname = $("#username").val();
+                var pass = $("#password").val();
+
+                if(uname == "" || password == ""){
+                    Materialize.toast("Invalid username or password", 4000, 'rounded');
                     return;
                 }
                 console.log("here");
-                socket.emit('addUser', {val});
+
+            });
+
+            $('.signup-button').click(function(event){
+                var fname = $("#firstname").val();
+                var lname = $("#lastname").val();
+                var uname = $("#username-signup").val();
+                var pass = $("#password-signup").val();
+
+                if (fname == "" || lname == "" || uname == "" || pass == ""){
+                    Materialize.toast("You left one or more details blank", 4000, 'rounded');
+                    return;
+                }
+
+                socket.emit('addUser', {fname, lname, uname, pass});
+
+                return;
+            });
+
+            $('#login-tab').click(function(event){
+                console.log("Clicked Login");
+                $(".login-form").show();
+                $(".signup-form").hide();
+            });
+
+            $('#signup-tab').click(function(event){
+                console.log("Clicked sign up");
+                $(".login-form").hide();
+                $(".signup-form").show();
 
             });
 
