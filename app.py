@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, session, Response
 import socketio
 import eventlet
 import eventlet.wsgi
@@ -15,13 +15,15 @@ from threading import Lock
 from flask import request
 from functools import reduce
 
+from bson import json_util
+
 import User
 import Story
 
 thread = None
 thread_lock = Lock()
 
-stories = {}
+storyList = {}
 poolMoney = 0
 timer = 180
 users = {}
@@ -46,24 +48,76 @@ def timerHelper():
             stories = {}
             socketio.emit('updateStories', [])
 
-@app.route("/<id>")
-def hello(id = 0):
-	return render_template('stories.html', uID = id)
-
-@app.route("/main")
-def main():
-	return render_template('stories.html')
+@app.route("/stories")
+def stories():
+    if session.get('user') is None:
+        return redirect(url("index"))
+    return render_template('stories.html', uID = session.get('user'))
 
 @app.route("/index")
 def index():
 	return render_template('index.html')
+
+@app.route("/addUser", methods=['POST'])
+def addUser():
+    username = request.get_json()
+    global users
+    if username["uname"] in users.keys():
+        return Response(500)
+    global poolMoney
+    poolMoney += 5
+    socketio.emit("updatedMoney", poolMoney)
+
+    #adding user to state
+    tempUser = User.User(username['fname'], username['lname'], username['uname'], username['pass'])
+    users[tempUser.getUname()] = tempUser
+    serializable_user_obj = json_util.dumps(tempUser.getUname())
+    session['user'] = serializable_user_obj
+
+    socketio.emit("newUser", tempUser.getName())
+    #return Response(status=200)
+
+    return url_for("stories")
+
+@app.route("/login", methods = ['POST'])
+def login():
+    username = request.get_json()
+    uname = username["uname"]
+    pwd = username["pass"]
+
+    global users
+    if username in users.keys():
+        if users[username].getPassword():
+            serializable_user_obj = json_util.dumps(users[username].getUname())
+            session['user'] = serializable_user_obj
+
+            return url_for("stories")
+
+    return Response(401)
+
+@app.route("/getUsers", method = ['GET'])
+def getUsers():
+    if session.get('user') is None:
+        return redirect(url("index"))
+
+    global users
+    return [x.getName() for x in users.values()]
+
+@app.route("/getStories", method = ['GET'] )
+def getStories():
+    if session.get('user') is None:
+        return redirect(url("index"))
+
+    global stories
+    return [x.__dict__ for x in list(storyList.values())]
+
 
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
     global poolMoney
     global stories
-    newStories = [x.__dict__ for x in list(stories.values())]
+    newStories = [x.__dict__ for x in list(storyList.values())]
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
@@ -73,10 +127,10 @@ def connect():
     global thread
     with thread_lock:
         if thread is None:
-        	thread = socketio.start_background_task(target=timerHelper)
+         	thread = socketio.start_background_task(target=timerHelper)
 
     if stories =={}:
-        temp = User.User(name="Zeeshan", balance = 500)
+        temp = User.User("Zeeshan", "Hanif", "zh278", "unbanked")
         users[temp.getID()] = temp
         tempS = Story.Story("College books", temp.getID(), "I need to buy books for college", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
         stories[temp.getID()] = tempS
@@ -84,7 +138,6 @@ def connect():
 @socketio.on('myEvent')
 def handle_my_custom_event():
     print("New user connected!")
-
 
 
 @socketio.on('addStory')
@@ -105,23 +158,6 @@ def newVote(uID, voterID):
     newStories = [x.__dict__ for x in list(stories.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
 
-@socketio.on('addUser')
-def connect(username):
-    print("Username joined:", username)
-    print (username['pass'])
-    # userBal = random.randint(100,1000)
-    # global poolMoney
-    # poolMoney += 100
-    # socketio.emit("updatedMoney", poolMoney)
-
-    # #adding user to state
-    # tempUser = User.User(name = username['val'], balance = userBal-100)
-    # users[tempUser.getID()] = tempUser
-    # userID = tempUser.getID()
-    # emit("registered", userID)
-    # print('USERS', users)
-    # allUsers = [x.getName() for x in users.values()]
-    # socketio.emit("newUser", allUsers)
 
 
 def calculateWinner():

@@ -2,46 +2,30 @@ import uuid
 
 class User:
     id = ""
-    name = ""
-    balance = 0.0
+    fname = ""
+    lname = ""
+    username = ""
     stories = []
+    password = ""
 
-    def __init__(self, name="", balance=0.0, stories=[]):
+    def __init__(self, fname, lname, username, password):
         self.id = uuid.uuid1()
-        self.name = name
-        self.balance = balance
-        self.stories = stories
+        self.fname = fname
+        self.lname = lname
+        self.username = username
+        self.password = password
 
     def getID(self):
         return str(self.id)
 
-    def getName(self):
-        return self.name
+    def getUname(self):
+        return self.username
 
-    def getBalance(self):
-        return self.balance
+    def getName(self):
+        return self.fname
 
     def getStories(self):
         return self.stories
-
-    def addBalance(self, inmoney):
-        try:
-            self.balance += inmoney
-            return True
-        except(Exception, e):
-            print(e)
-            return False
-
-    def removeBalance(self, outmoney):
-        try:
-            if self.balance < outmoney:
-                return False
-            else:
-                self.balance -= outmoney
-                return True
-        except(Exception, e):
-            print(e)
-            return False
 
     def addStory(self, story):
         try:
@@ -50,3 +34,6 @@ class User:
         except(Exception, e):
             print(e)
             return False
+
+    def getPassword():
+        return self.password

@@ -15,20 +15,6 @@ $(document).ready(function(){
                 $('#log').append('<br>Received: ' + msg.data);
             });
 
-             socket.on("registered", function(msg){
-                if (msg == "taken"){
-                    Materialize.toast("This username is already in use", 4000, 'rounded');
-                }
-
-                if (msg == ""){
-                    Materialize.toast("Your username or password was wrong", 4000, 'rounded');
-                }
-                var redirectUrl = "https://" + window.location.hostname + '/' + msg;
-                console.log(redirectUrl);
-                window.location.replace(redirectUrl);
-             })
-
-
             // event handler for server sent data
             // the data is displayed in the "Received" section of the page
             // handlers for the different forms in the page
@@ -41,7 +27,22 @@ $(document).ready(function(){
                     Materialize.toast("Invalid username or password", 4000, 'rounded');
                     return;
                 }
-                console.log("here");
+
+               $.ajax({
+                    type: "POST",
+                    url: '/login',
+                    data: JSON.stringify({uname:uname, pass:password}) ,
+                    success: function(response){
+                        console.log(response);
+                        window.location = response;
+                    },
+                    error: function(httpObj, textStatus){
+                        if(httpObj = 401){
+                            Materialize.toast("Your username or password was wrong", 4000, 'rounded');
+                        }
+                    },
+                    contentType: 'application/json'
+                });
 
             });
 
@@ -56,7 +57,31 @@ $(document).ready(function(){
                     return;
                 }
 
-                socket.emit('addUser', {fname, lname, uname, pass});
+                var data = {
+                    fname: fname,
+                    lname: lname,
+                    uname: uname,
+                    pass: pass
+                }
+                //console.log(data)
+
+                $.ajax({
+                    type: "POST",
+                    url: '/addUser',
+                    data: JSON.stringify(data) ,
+                    success: function(response){
+                        console.log(response);
+                        window.location = response;
+                    },
+                    error: function(httpObj, status){
+                        if(httpObj == 500){
+                            Materialize.toast("Username already exists", 4000, 'rounded');
+                        }
+                    },
+                    contentType: 'application/json'
+                });
+
+                //socket.emit('addUser', {fname, lname, uname, pass});
 
                 return;
             });
