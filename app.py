@@ -33,9 +33,28 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+@app.route("/setTimer", methods = ["POST"])
+def setTimer():
+    data = request.get_json()
+    try:
+        time = int(data.get("time"))
+    except:
+        return Response(500)
+
+    global timer 
+    timer = time
+    socketio.emit("timerUpdate", timer)
+
+    return Response(200)
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return Response(200)
+
+
 def timerHelper():
     global timer
-    global stories
     while timer > 0:
         timer-=1
         socketio.emit("timerUpdate", timer)
@@ -45,13 +64,12 @@ def timerHelper():
             socketio.emit("winner", winner)
             timer = 180
             socketio.emit("timerUpdate", timer)
-            stories = {}
             socketio.emit('updateStories', [])
 
 @app.route("/stories")
-def stories():
-    if session.get('user') is None:
-        return redirect(url("index"))
+def getStories():
+    if session.get('user') is None or session.get('user') not in users.keys():
+        return redirect(url_for("index"))
     return render_template('stories.html', uID = session.get('user'))
 
 @app.route("/index")
@@ -71,52 +89,30 @@ def addUser():
     #adding user to state
     tempUser = User.User(username['fname'], username['lname'], username['uname'], username['pass'])
     users[tempUser.getUname()] = tempUser
-    serializable_user_obj = json_util.dumps(tempUser.getUname())
-    session['user'] = serializable_user_obj
+    session['user'] = username["uname"]
 
     socketio.emit("newUser", tempUser.getName())
     #return Response(status=200)
-
-    return url_for("stories")
+    return url_for("getStories")
 
 @app.route("/login", methods = ['POST'])
 def login():
     username = request.get_json()
     uname = username["uname"]
     pwd = username["pass"]
-
     global users
     if username in users.keys():
-        if users[username].getPassword():
-            serializable_user_obj = json_util.dumps(users[username].getUname())
-            session['user'] = serializable_user_obj
-
-            return url_for("stories")
-
+        if users[username].getPassword() == pwd:
+            session['user'] = username
+            return url_for("getStories")
     return Response(401)
-
-@app.route("/getUsers", method = ['GET'])
-def getUsers():
-    if session.get('user') is None:
-        return redirect(url("index"))
-
-    global users
-    return [x.getName() for x in users.values()]
-
-@app.route("/getStories", method = ['GET'] )
-def getStories():
-    if session.get('user') is None:
-        return redirect(url("index"))
-
-    global stories
-    return [x.__dict__ for x in list(storyList.values())]
 
 
 @socketio.on('connect')
 def connect():
     print("CONNECTEDD")
     global poolMoney
-    global stories
+    global storyList
     newStories = [x.__dict__ for x in list(storyList.values())]
     emit("updatedMoney", poolMoney)
     global timer
@@ -129,11 +125,11 @@ def connect():
         if thread is None:
          	thread = socketio.start_background_task(target=timerHelper)
 
-    if stories =={}:
-        temp = User.User("Zeeshan", "Hanif", "zh278", "unbanked")
-        users[temp.getID()] = temp
-        tempS = Story.Story("College books", temp.getID(), "I need to buy books for college", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
-        stories[temp.getID()] = tempS
+    # if stories =={}:
+    #     temp = User.User("Zeeshan", "Hanif", "zh278", "unbanked")
+    #     users[temp.getID()] = temp
+    #     tempS = Story.Story("College books", temp.getID(), "I need to buy books for college", "https://cdn.eso.org/images/thumb700x/eso1238a.jpg")
+    #     stories[temp.getID()] = tempS
 
 @socketio.on('myEvent')
 def handle_my_custom_event():
@@ -143,27 +139,26 @@ def handle_my_custom_event():
 @socketio.on('addStory')
 def connect(data):
     #stories.append(data)
-    print("New story", data)
     if data["ownerID"] not in users:
     	return
-    stories[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
-    newStories = [x.__dict__ for x in list(stories.values())]
+    storyList[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
+    newStories = [x.__dict__ for x in list(storyList.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
 
 
 @socketio.on('newVote')
 def newVote(uID, voterID):
-    story = stories[uID]
+    story = storyList[uID]
     story.addUpvote(voterID)
-    newStories = [x.__dict__ for x in list(stories.values())]
+    newStories = [x.__dict__ for x in list(storyList.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
 
 
 
 def calculateWinner():
-	if len(stories)==0 or len(users)==0:
+	if len(storyList)==0 or len(users)==0:
 		return "No one "
-	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(stories.values()))
+	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(storyList.values()))
 	winUser = users[winStory.ownerID]
 	return winUser.getName()
 

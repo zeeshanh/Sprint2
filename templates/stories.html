@@ -95,13 +95,13 @@
 
     socket.on('updatedMoney', function(money){
       console.log("updated money")
-      console.log(money)
+      //console.log(money)
       $("#money").html(money);
     })
 
     socket.on('timerUpdate', function(time){
       $("#timer").html(time + " seconds");
-      console.log("updating timer");
+      //console.log("updating timer");
     })
 
     socket.on('newUser', function(users){
