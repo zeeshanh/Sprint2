@@ -23,33 +23,39 @@
     function createStory(story) {
 
       var newListItem = document.createElement('li')
-      newListItem.classList.add("collection-item")
+      newListItem.classList.add("collection-item", "row")
       newListItem.classList.add("avatar")
 
       var image = createStoryImage(story.displays)
 
-      var title = document.createElement('span')
-      title.classList.add("title")
+      var storyTextContainer = document.createElement('div')
 
-      var text = document.createElement('p')
+      var title = document.createElement('span')
+      title.classList.add("story-title")
+      title.classList.add("story-text")
+
+      // var text = document.createElement('p')
+      // text.classList.add("story-details")
+      // text.classList.add("story-text")
+
+      storyTextContainer.appendChild(title)
+      // storyTextContainer.appendChild(text)
+      storyTextContainer.classList.add('story-text-container', "col", "s8", "m8")
 
       var button = createVoteButton(story)
-      button.classList.add("waves-effect")
-      button.classList.add("waves-light")
-      button.classList.add("btn")
-      button.classList.add("secondary-content")
+
 
       var numVotes = document.createElement('span')
       numVotes.classList.add("badge");
       //numVotes.classList.add("numVotes")
 
       title.appendChild(document.createTextNode(story.name))
-      text.appendChild(document.createTextNode(story.text))
+      // text.appendChild(document.createTextNode(story.text))
       numVotes.appendChild(document.createTextNode(story.upvote))
 
       newListItem.appendChild(image)
-      newListItem.appendChild(title)
-      newListItem.appendChild(text)
+      newListItem.appendChild(storyTextContainer)
+      // newListItem.appendChild(text)
       newListItem.appendChild(button)
       newListItem.appendChild(numVotes)
       newListItem.setAttribute("id", story.ownerID);
@@ -57,8 +63,14 @@
     }
 
     function createVoteButton(story) {
+      var voteButtonContainer = document.createElement('div')
+      voteButtonContainer.classList.add("col", "s2", "m2")
       var button = document.createElement('button')
       button.classList.add("vote-button")
+      button.classList.add("waves-effect")
+      button.classList.add("waves-light")
+      button.classList.add("btn-large")
+      button.classList.add("secondary-content")
       //button.innerText = 'vote'
       var voterID = $("#ownerID").html()
       button.addEventListener('click', emitVote.bind(this, story.ownerID, voterID))
@@ -69,16 +81,21 @@
       icon.innerText = "thumb_up"
 
       button.appendChild(icon)
-      return button
+      voteButtonContainer.appendChild(button)
+      return voteButtonContainer
     }
 
     function createStoryImage(imgSource) {
+      var imageContainer = document.createElement('div')
+      imageContainer.classList.add('col', 's2', 'm2')
       var image = document.createElement('img')
       image.classList.add("circle")
       image.src = imgSource
-      //image.height = 100
-      //image.weight = 100
-      return image
+      image.style.position = "inherit"
+      image.height = '80px'
+      image.weight = '80px'
+      imageContainer.appendChild(image)
+      return imageContainer
     }
 
     socket.on('updateStories', function(stories){
