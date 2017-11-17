@@ -5,7 +5,9 @@
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/css/materialize.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.100.2/js/materialize.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/alertify.min.js"></script>
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.11.0/build/css/alertify.min.css"/>
 
 
   <link rel="stylesheet" href={{ url_for('static', filename='stories.css') }}>
@@ -138,7 +140,9 @@
     })
 
     socket.on('winner', function(winner){
-      Materialize.toast("This round is over. " + winner + " is the winner", 10000, 'rounded')
+      alertify.success("This round is over. " + winner + " is the winner").
+      alert.set('resizable',true).resizeTo('100%',500); ;
+      //alertify.closeLogOnClick(true);
     })
 
     window.onload = function(){
