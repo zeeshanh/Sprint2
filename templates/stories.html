@@ -134,9 +134,15 @@
       //users.forEach(function(user){
         //usersStr += user + ', '
         //$("#users").html(usersStr);
-        console.log(users);
-        console.log("updating users");
+        //console.log(users);
+        //console.log("updating users");
         $("#userCount").html(users);
+
+    })
+
+    socket.on("leader", function(leader){
+      //console.log(leader);
+      $(".leader").html(leader);
 
     })
 
@@ -245,7 +251,15 @@
         </div>
       </div>
     </div>
+
+    <nav>
+
+    <div class="nav-wrapper">
+      <a href="#" class=" leader brand-logo center"></a>
+    </div>
+  </nav>
     <br>
+
     <button id="viewForm" class = "waves-effect waves-light btn" type="button" name="button">Add Story</button>
     <form id="story_form">
       Story Title:<br>

@@ -27,7 +27,7 @@ thread_lock = Lock()
 
 storyList = {}
 poolMoney = 0
-timer = 10
+timer = 180
 users = []
 numUsers = 0
 
@@ -67,7 +67,7 @@ def timerHelper():
         if timer==1:
             winner = calculateWinner()
             socketio.emit("winner", winner)
-            timer = 10
+            timer = 180
             socketio.emit("timerUpdate", timer)
             socketio.emit('updateStories', [])
 
@@ -149,6 +149,12 @@ def connect():
     #socketio.emit("newUser", allUsers)
 
     socketio.emit("newUser", numUsers)
+    leader, votes = getLeader()
+    if votes == 0:
+        socketio.emit('leader', "No votes so far")
+    else:
+        socketio.emit('leader', leader + " leading - " + str(votes)+ " votes")
+
 
     global thread
     with thread_lock:
@@ -175,6 +181,11 @@ def connect(data):
     newStories = [x.__dict__ for x in list(storyList.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
 
+def getLeader():
+    global storyList
+    newList = sorted(storyList.keys(), key=lambda x: storyList[x].upvote)
+    leader = newList[-1]
+    return (leader, storyList[leader].upvote)
 
 @socketio.on('newVote')
 def newVote(uID, voterID):
@@ -183,6 +194,11 @@ def newVote(uID, voterID):
     story.addUpvote(voterID)
     newStories = [x.__dict__ for x in list(storyList.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
+    leader, votes = getLeader()
+    if votes == 0:
+        socketio.emit('leader', "no one")
+    else:
+        socketio.emit('leader', leader + " leading - " + str(votes)+ " votes")
 
 
 
