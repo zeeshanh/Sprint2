@@ -202,8 +202,9 @@ def readStories():
         if temp[0]=="":
             break
         poolMoney+=5
-        storyList[temp[0]] = (Story.Story(temp[2], temp[0], "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
-        print temp
+        storyList[temp[0]] = (Story.Story(temp[2], temp[0], "dsads", temp[3]))
+        print temp[3]
+        #print temp
     return
 
 readStories()
