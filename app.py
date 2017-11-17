@@ -44,7 +44,7 @@ def setTimer():
     except:
         return Response(500)
 
-    global timer 
+    global timer
     timer = time
     socketio.emit("timerUpdate", timer)
 
@@ -75,22 +75,19 @@ def getStories():
      #   return redirect(url_for("index"))
     #session.clear()
     #print session.get('user')
+    global users
+    global numUsers
     if session.get('user') is None:
         userID = uuid.uuid1()
         session['user'] = userID
 
-        global users
         users.append(userID)
-
-        global numUsers
         numUsers+=1
 
         socketio.emit("newUser", numUsers)
     elif session.get('user') not in users:
-        global users
-        users.append(userID)
+        users.append(session.get('user'))
 
-        global numUsers
         numUsers+=1
 
         socketio.emit("newUser", numUsers)
@@ -148,7 +145,7 @@ def connect():
     #socketio.emit("newUser", allUsers)
 
     socketio.emit("newUser", numUsers)
-    
+
     global thread
     with thread_lock:
         if thread is None:
@@ -200,7 +197,7 @@ def readStories():
         if temp[0]=="":
             break
         storyList[i] = (Story.Story(temp[2], i, "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
-        print temp
+        print(temp)
     return
 
 readStories()
