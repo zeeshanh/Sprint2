@@ -24,8 +24,15 @@
   color: none;
 }
 
+.story-details{
+	font-size: 1.8em;
+	font-weight: 600;
+	padding-top:0.5em;
+}
+
 .story-title {
-  font-size: 2.2em
+  font-size: 2.5em;
+  line-height: 1.5em;
 }
 
 .story-details {
@@ -33,33 +40,42 @@
 }
 
 .story-text-container {
-  padding-top: 20px
+  padding-top: -20px;
 }
 
-.collection {
-  padding: 3em;
+.row .col.m8 {
+  padding-top: 20px;
 }
+
 
 .collection .collection-item {
-  margin-top: 30px;
+  margin-top: 50px;
+  padding-bottom: 50px;
+}
+
+img {
+  display: block;
 }
 
 .collection .collection-item.avatar :not(.circle-clipper)>.circle {
-  height: 80px;
-  width: 80px;
+  height: 100px;
+  width: 100px;
 }
 
 .vote-button {
   position: inherit
 }
 
-.badge {
+/*.badge {
   position: absolute;
   top: 30px;
-}
+}*/
 
 span.badge {
   font-size: 2em;
+  position: absolute;
+  right: 60px;
+  top: 120px;
 }
 
 body{
@@ -67,12 +83,32 @@ body{
 	padding-right:40px;
 }
 
+.vote-button {
+  height: 60px;
+  width: 100px;
+  margin-right: 20px;
+}
+
+.btn-large i {
+  font-size: 2rem;
+}
+
+.card .card-title{
+  font-size: 48px;
+  font-weight: 400;
+}
+
+/*@media screen and (max-width : 680px) {
+  .story-title {
+    font-size: 2.2em
+  }
+
+
+  .collection .collection-item.avatar :not(.circle-clipper)>.circle {
+    height: 110px;
+    width: 110px;
+  }
+}*/
 .toast {
 	font-size: 2.4em;
 }
-
-@media (max-width : 680px){
-  .story-title {
-    font-size: 3em
-  }
-

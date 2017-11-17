@@ -1,5 +1,6 @@
 <!doctype html>
 <head>
+  <!-- <meta name="viewport" content="width=device-width, initial-scale=1.0"> -->
   <title>Flaskr</title>
   <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.5/socket.io.min.js"></script>
   <script type="text/javascript" src="//code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -40,12 +41,12 @@
       title.classList.add("story-title")
       title.classList.add("story-text")
 
-      // var text = document.createElement('p')
-      // text.classList.add("story-details")
-      // text.classList.add("story-text")
+      var text = document.createElement('p')
+      text.classList.add("story-details")
+      text.classList.add("story-text")
 
       storyTextContainer.appendChild(title)
-      // storyTextContainer.appendChild(text)
+      storyTextContainer.appendChild(text)
       storyTextContainer.classList.add('story-text-container', "col", "s8", "m8")
 
       var button = createVoteButton(story)
@@ -56,7 +57,7 @@
       //numVotes.classList.add("numVotes")
 
       title.appendChild(document.createTextNode(story.name))
-      // text.appendChild(document.createTextNode(story.text))
+      text.appendChild(document.createTextNode(story.text))
       numVotes.appendChild(document.createTextNode(story.upvote))
 
       newListItem.appendChild(image)
@@ -217,7 +218,7 @@
           <div class="card-content white-text">
             <div class = "center-align">
               <i class="large material-icons">access_time</i>
-           
+
             <span class="card-title center" id = "timer"></span>
              </div>
           </div>
@@ -256,7 +257,6 @@
     </form>
     <button id="storyButton" class = "waves-effect waves-light btn" type="submit" name="button">Submit</button>
       <button id = "cancelButton" class = "waves-effect waves-light btn">Cancel</button>
-       <div class = "center" id = "storyHead"><h4>Vote for you favorite story!</h4></div>
 
     <ul class = "collection" id='storiesList'>
 

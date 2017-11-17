@@ -44,10 +44,10 @@ def setTimer():
     except:
         return Response(500)
 
-    global timer 
+    global timer
 
     timer = time
-    print timer
+    print(timer)
     socketio.emit("timerUpdate", timer)
 
     return Response(200)
@@ -83,13 +83,13 @@ def getStories():
         userID = uuid.uuid1()
         session['user'] = userID
 
-        
+
         users.append(userID)
         numUsers+=1
 
         socketio.emit("newUser", numUsers)
     elif session.get('user') not in users:
-        
+
         users.append(session.get('user'))
 
         numUsers+=1
@@ -149,7 +149,7 @@ def connect():
     #socketio.emit("newUser", allUsers)
 
     socketio.emit("newUser", numUsers)
-    
+
     global thread
     with thread_lock:
         if thread is None:
@@ -202,7 +202,7 @@ def readStories():
         if temp[0]=="":
             break
         poolMoney+=5
-        storyList[temp[0]] = (Story.Story(temp[2], temp[0], "dsads", temp[3]))
+        storyList[temp[0]] = (Story.Story(temp[2], temp[0], temp[0], temp[3]))
         print temp[3]
         #print temp
     return
