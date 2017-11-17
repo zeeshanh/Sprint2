@@ -3,6 +3,9 @@ body {
   margin:0px;
 	background-size: 100% 100%;
 	background-repeat: no-repeat;
+  font-family: 'helvetica-light';
+  letter-spacing: 2px;
+
 }
 
 h1, h2, h3, h4, h5, h6, a {
@@ -100,7 +103,7 @@ h1, h2, h3, h4, h5, h6, a {
 }
 
 
-@media only screen and (min-width : 150px) and (max-width : 530px){
+/*@media only screen and (min-width : 150px) and (max-width : 530px){
   .login-form h3 {
     text-align:center;
     margin:0;
@@ -111,4 +114,4 @@ h1, h2, h3, h4, h5, h6, a {
   .login-button {
     margin-bottom:10px;
   }
-}
+}*/

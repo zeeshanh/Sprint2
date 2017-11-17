@@ -28,12 +28,18 @@
   padding-top: 20px
 }
 
-.collection {
-  padding: 3em;
+.row .col.m8 {
+  padding-top: 20px;
 }
 
+
 .collection .collection-item {
-  margin-top: 30px;
+  margin-top: 50px;
+  padding-bottom: 50px;
+}
+
+img {
+  display: block;
 }
 
 .collection .collection-item.avatar :not(.circle-clipper)>.circle {
@@ -59,13 +65,22 @@ body{
 	padding-right:40px;
 }
 
-@media (max-width : 680px){
+.card .card-title{
+  font-size: 48px;
+  font-weight: 400;
+}
+
+@media screen and (max-width : 680px) {
   .story-title {
-    font-size: 3em
+    font-size: 2.2em
   }
 
+  /*body {
+    background-color: red;
+  }*/
 
-.card .card-title{
-	font-size: 48px;
-	font-weight: 400;
+  .collection .collection-item.avatar :not(.circle-clipper)>.circle {
+    height: 110px;
+    width: 110px;
+  }
 }
