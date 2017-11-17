@@ -26,7 +26,7 @@ thread = None
 thread_lock = Lock()
 
 storyList = {}
-poolMoney = 0
+poolMoney = 50
 timer = 180
 users = []
 numUsers = 0
@@ -109,7 +109,7 @@ def addUser():
     if username["uname"] in users.keys():
         return Response(500)
     global poolMoney
-    poolMoney += 5
+    #poolMoney += 5
     socketio.emit("updatedMoney", poolMoney)
 
     #adding user to state
@@ -217,7 +217,7 @@ def readStories():
         temp = stry.split(",")
         if temp[0]=="":
             break
-        poolMoney+=5
+        #poolMoney+=5
         storyList[temp[0]] = (Story.Story(temp[2], temp[0], temp[0], temp[3]))
         print temp[3]
         #print temp
