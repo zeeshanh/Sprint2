@@ -140,8 +140,13 @@
     })
 
     socket.on('winner', function(winner){
-      alertify.success("This round is over. " + winner + " is the winner").
-      alert.set('resizable',true).resizeTo('100%',500); ;
+      //alertify.alert('Round over. ', winner + "is the winner");
+      Materialize.toast("The voting round is over. " + winner + " is the winner!", 10000, 'rounded');
+      //alertify.set('notifier','position', 'top-right');
+      //var notification = alertify.notify('sample', 'success', 5, function(){  console.log('dismissed'); });
+
+      //lertify.success("This round is over. " + winner + " is the winner").
+      //alert.set('resizable',true).resizeTo('100%',500); ;
       //alertify.closeLogOnClick(true);
     })
 
