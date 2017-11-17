@@ -126,13 +126,15 @@
     })
 
     socket.on('newUser', function(users){
-      console.log(users)
-      var usersStr = ''
-      users.forEach(function(user){
-        usersStr += user + ', '
-        $("#users").html(usersStr);
+      //console.log(users)
+      //var usersStr = ''
+      //users.forEach(function(user){
+        //usersStr += user + ', '
+        //$("#users").html(usersStr);
+        console.log(users);
         console.log("updating users");
-      })
+        $("#userCount").html(users);
+
     })
 
     socket.on('winner', function(winner){

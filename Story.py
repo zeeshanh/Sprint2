@@ -28,9 +28,9 @@ class Story:
 
     def addUpvote(self, userID):
         print(self.ownerID, userID)
-        if self.ownerID == userID:
-            print("One cannot", userID, "vote for oneself.")
-        elif self.upvoters.__contains__(userID) or self.downvoters.__contains__(userID):
+        #if self.ownerID == userID:
+         #   print("One cannot", userID, "vote for oneself.")
+        if self.upvoters.__contains__(userID) or self.downvoters.__contains__(userID):
             print("User:", userID, "has already voted.")
         else:
             self.upvote += 1
