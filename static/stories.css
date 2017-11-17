@@ -4,6 +4,10 @@
   float:left;
 }
 
+#viewForm, #story_form{
+	display:none;
+}
+
 #header{
   height:30%;
 }
@@ -59,4 +63,8 @@ body{
   .story-title {
     font-size: 3em
   }
+
+.card .card-title{
+	font-size: 48px;
+	font-weight: 400;
 }
