@@ -20,20 +20,21 @@ from bson import json_util
 import User
 import Story
 
+import uuid
+
 thread = None
 thread_lock = Lock()
 
 storyList = {}
 poolMoney = 0
 timer = 180
-users = {}
+users = []
+numUsers = 0
 
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
-
-
 
 @app.route("/setTimer", methods = ["POST"])
 def setTimer():
@@ -72,6 +73,27 @@ def timerHelper():
 def getStories():
     #if session.get('user') is None or session.get('user') not in users.keys():
      #   return redirect(url_for("index"))
+    #session.clear()
+    #print session.get('user')
+    if session.get('user') is None:
+        userID = uuid.uuid1()
+        session['user'] = userID
+
+        global users
+        users.append(userID)
+
+        global numUsers
+        numUsers+=1
+
+        socketio.emit("newUser", numUsers)
+    elif session.get('user') not in users:
+        global users
+        users.append(userID)
+
+        global numUsers
+        numUsers+=1
+
+        socketio.emit("newUser", numUsers)
 
     return render_template('stories.html', uID = session.get('user'))
 
@@ -116,13 +138,17 @@ def connect():
     print("CONNECTEDD")
     global poolMoney
     global storyList
+    global numUsers
     newStories = [x.__dict__ for x in list(storyList.values())]
     emit("updatedMoney", poolMoney)
     global timer
     emit("timerUpdate", timer)
     emit('updateStories', list(reversed(newStories)))
-    allUsers = [x.getName() for x in users.values()]
-    socketio.emit("newUser", allUsers)
+    #allUsers = [x.getName() for x in users.values()]
+    #socketio.emit("newUser", allUsers)
+
+    socketio.emit("newUser", numUsers)
+    
     global thread
     with thread_lock:
         if thread is None:
@@ -151,6 +177,7 @@ def connect(data):
 
 @socketio.on('newVote')
 def newVote(uID, voterID):
+    #print uID, voterID
     story = storyList[uID]
     story.addUpvote(voterID)
     newStories = [x.__dict__ for x in list(storyList.values())]
@@ -162,18 +189,17 @@ def calculateWinner():
 	if len(storyList)==0 or len(users)==0:
 		return "No one "
 	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(storyList.values()))
-	winUser = users[winStory.ownerID]
-	return winUser.getName()
+	#winUser = users[winStory.ownerID]
+	return winUser.ownerID
 
 def readStories():
     f = open("stories.csv")
     strs = f.readlines()
-    print(strs)
-    for stry in strs:
+    for i, stry in enumerate(strs):
         temp = stry.split(",")
         if temp[0]=="":
             break
-        storyList[temp[0]] = (Story.Story(temp[2], "23", "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
+        storyList[i] = (Story.Story(temp[2], i, "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
         print temp
     return
 
