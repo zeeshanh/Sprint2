@@ -17,7 +17,7 @@
 }
 
 .story-title {
-  font-size: 1.8em
+  font-size: 2.5em
 }
 
 .story-details {
@@ -43,21 +43,24 @@ img {
 }
 
 .collection .collection-item.avatar :not(.circle-clipper)>.circle {
-  height: 80px;
-  width: 80px;
+  height: 100px;
+  width: 100px;
 }
 
 .vote-button {
   position: inherit
 }
 
-.badge {
+/*.badge {
   position: absolute;
   top: 30px;
-}
+}*/
 
 span.badge {
   font-size: 2em;
+  position: absolute;
+  right: 60px;
+  top: 120px;
 }
 
 body{
@@ -65,22 +68,29 @@ body{
 	padding-right:40px;
 }
 
+.vote-button {
+  height: 60px;
+  width: 100px;
+  margin-right: 20px;
+}
+
+.btn-large i {
+  font-size: 2rem;
+}
+
 .card .card-title{
   font-size: 48px;
   font-weight: 400;
 }
 
-@media screen and (max-width : 680px) {
+/*@media screen and (max-width : 680px) {
   .story-title {
     font-size: 2.2em
   }
 
-  /*body {
-    background-color: red;
-  }*/
 
   .collection .collection-item.avatar :not(.circle-clipper)>.circle {
     height: 110px;
     width: 110px;
   }
-}
+}*/
