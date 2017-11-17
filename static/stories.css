@@ -1,4 +1,12 @@
 
+.card .card-title{
+	font-size: 48px;
+	font-weight: 400;
+}
+
+#storyHead{
+	padding-bottom: 10px;
+}
 
 .vote-button{
   float:left;
@@ -94,3 +102,6 @@ body{
     width: 110px;
   }
 }*/
+.toast {
+	font-size: 2.4em;
+}

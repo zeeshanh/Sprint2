@@ -40,12 +40,14 @@ socketio = SocketIO(app)
 def setTimer():
     data = request.get_json()
     try:
-        time = int(data.get("time"))
+        time = int(data.get('time'))
     except:
         return Response(500)
 
     global timer
+
     timer = time
+    print timer
     socketio.emit("timerUpdate", timer)
 
     return Response(200)
@@ -75,17 +77,19 @@ def getStories():
      #   return redirect(url_for("index"))
     #session.clear()
     #print session.get('user')
-    global users
     global numUsers
+    global users
     if session.get('user') is None:
         userID = uuid.uuid1()
         session['user'] = userID
+
 
         users.append(userID)
         numUsers+=1
 
         socketio.emit("newUser", numUsers)
     elif session.get('user') not in users:
+
         users.append(session.get('user'))
 
         numUsers+=1
@@ -187,17 +191,19 @@ def calculateWinner():
 		return "No one "
 	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(storyList.values()))
 	#winUser = users[winStory.ownerID]
-	return winUser.ownerID
+	return winStory.ownerID
 
 def readStories():
     f = open("stories.csv")
     strs = f.readlines()
-    for i, stry in enumerate(strs):
+    global poolMoney
+    for i, stry in enumerate(strs[1:]):
         temp = stry.split(",")
         if temp[0]=="":
             break
-        storyList[i] = (Story.Story(temp[2], i, "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
-        print(temp)
+        poolMoney+=5
+        storyList[temp[0]] = (Story.Story(temp[2], temp[0], "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
+        print temp
     return
 
 readStories()
