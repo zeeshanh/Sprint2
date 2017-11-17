@@ -33,6 +33,8 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = 'secret!'
 socketio = SocketIO(app)
 
+
+
 @app.route("/setTimer", methods = ["POST"])
 def setTimer():
     data = request.get_json()
@@ -68,8 +70,9 @@ def timerHelper():
 
 @app.route("/stories")
 def getStories():
-    if session.get('user') is None or session.get('user') not in users.keys():
-        return redirect(url_for("index"))
+    #if session.get('user') is None or session.get('user') not in users.keys():
+     #   return redirect(url_for("index"))
+
     return render_template('stories.html', uID = session.get('user'))
 
 @app.route("/index")
@@ -161,6 +164,20 @@ def calculateWinner():
 	winStory= reduce(lambda x, y : x if x.getUpvoteNum() > y.getUpvoteNum() else y, list(storyList.values()))
 	winUser = users[winStory.ownerID]
 	return winUser.getName()
+
+def readStories():
+    f = open("stories.csv")
+    strs = f.readlines()
+    print(strs)
+    for stry in strs:
+        temp = stry.split(",")
+        if temp[0]=="":
+            break
+        storyList[temp[0]] = (Story.Story(temp[2], "23", "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
+        print temp
+    return
+
+readStories()
 
 @app.after_request
 def add_header(r):
