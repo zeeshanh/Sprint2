@@ -47,7 +47,7 @@ def setTimer():
     global timer
 
     timer = time
-    print timer
+    print(timer)
     socketio.emit("timerUpdate", timer)
 
     return Response(200)
@@ -203,7 +203,7 @@ def readStories():
             break
         poolMoney+=5
         storyList[temp[0]] = (Story.Story(temp[2], temp[0], "dsads", "https://pbs.twimg.com/profile_images/834788534053699584/4MIgR0Rl.jpg"))
-        print temp
+        print(temp)
     return
 
 readStories()
