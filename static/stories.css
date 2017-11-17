@@ -4,6 +4,10 @@
 	font-weight: 400;
 }
 
+#storyHead{
+	padding-bottom: 10px;
+}
+
 .vote-button{
   float:left;
 }
@@ -21,7 +25,7 @@
 }
 
 .story-title {
-  font-size: 1.8em
+  font-size: 2.2em
 }
 
 .story-details {

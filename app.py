@@ -197,7 +197,7 @@ def readStories():
     f = open("stories.csv")
     strs = f.readlines()
     global poolMoney
-    for i, stry in enumerate(strs):
+    for i, stry in enumerate(strs[1:]):
         temp = stry.split(",")
         if temp[0]=="":
             break
