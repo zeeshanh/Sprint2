@@ -26,7 +26,7 @@ thread = None
 thread_lock = Lock()
 
 storyList = {}
-poolMoney = 50
+poolMoney = 0
 timer = 180
 users = []
 numUsers = 0
@@ -79,6 +79,7 @@ def getStories():
     #print session.get('user')
     global numUsers
     global users
+    global poolMoney
     if session.get('user') is None:
         userID = uuid.uuid1()
         session['user'] = userID
@@ -93,9 +94,12 @@ def getStories():
         users.append(session.get('user'))
 
         numUsers+=1
+        poolMoney+=100
 
         socketio.emit("newUser", numUsers)
+        socketio.emit("updatedMoney", poolMoney)
 
+    
     return render_template('stories.html', uID = session.get('user'))
 
 @app.route("/index")
@@ -175,15 +179,18 @@ def handle_my_custom_event():
 @socketio.on('addStory')
 def connect(data):
     #stories.append(data)
-    if data["ownerID"] not in users:
+    print data
+    if session.get('user')not in users:
     	return
-    storyList[data["ownerID"]]=(Story.Story(data["storyName"], data["ownerID"], data["storyText"], data["storyImage"]))
+    storyList[data["name"]]=(Story.Story(data["storyText"], data["name"], data["name"], data["storyImage"]))
     newStories = [x.__dict__ for x in list(storyList.values())]
     socketio.emit('updateStories', list(reversed(newStories)))
 
 def getLeader():
     global storyList
     newList = sorted(storyList.keys(), key=lambda x: storyList[x].upvote)
+    if newList == []:
+        return None, 0
     leader = newList[-1]
     return (leader, storyList[leader].upvote)
 
@@ -219,11 +226,11 @@ def readStories():
             break
         #poolMoney+=5
         storyList[temp[0]] = (Story.Story(temp[2], temp[0], temp[0], temp[3]))
-        print temp[3]
+        print storyList
         #print temp
     return
 
-readStories()
+#readStories()
 
 @app.after_request
 def add_header(r):

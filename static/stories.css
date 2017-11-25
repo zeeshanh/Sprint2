@@ -12,10 +12,6 @@
   float:left;
 }
 
-#viewForm, #story_form{
-	display:none;
-}
-
 #header{
   height:30%;
 }

@@ -160,7 +160,7 @@
     window.onload = function(){
 
       document.getElementById("storyButton").addEventListener('click', function(event){
-        var storyName = document.getElementById('storyName').value
+        var name = document.getElementById('storyName').value
         var storyText = document.getElementById('storyText').value
         var storyImage = document.getElementById('storyImage').value
 
@@ -170,7 +170,13 @@
 
         var ownerID = $("#ownerID").html()
         console.log(ownerID)
-        socket.emit('addStory', {storyName, ownerID,  storyText, storyImage})
+        socket.emit('addStory', {name, storyText, storyImage})
+
+        $("#story_form").hide();
+        $("#storyButton").hide();
+        $("#viewForm").show();
+        $("#cancelButton").hide()
+
       })
 
       document.getElementById("viewForm").addEventListener('click', function(event){
@@ -212,7 +218,7 @@
     <nav>
 
     <div class="nav-wrapper">
-      <a href="#" class="brand-logo left hide-on-down">Sparrow</a>
+      <a href="#" class="brand-logo left hide-on-down">Golden Days</a>
     </div>
   </nav>
   </div>
@@ -223,9 +229,8 @@
         <div class="card blue-grey darken-1">
           <div class="card-content white-text">
             <div class = "center-align">
-              <i class="large material-icons">access_time</i>
-
-            <span class="card-title center" id = "timer"></span>
+              <i class="large material-icons">attach_money</i>
+            <span class="card-title center" id = "money"></span>
              </div>
           </div>
         </div>
@@ -244,9 +249,9 @@
         <div class="card blue-grey darken-1">
           <div class="card-content white-text">
             <div class = "center-align">
-              <i class="large material-icons">attach_money</i>
+              <i class="large material-icons">access_time</i>
             </div>
-            <span class="card-title center" id = "money">5</span>
+            <span class="card-title center" id = "timer"></span>
           </div>
         </div>
       </div>
@@ -262,7 +267,7 @@
 
     <button id="viewForm" class = "waves-effect waves-light btn" type="button" name="button">Add Story</button>
     <form id="story_form">
-      Story Title:<br>
+      Your Name:<br>
       <input id="storyName" type="text" name="name"><br>
       Why do you need the money?:<br>
       <textarea id="storyText" name="story" form="story_form"></textarea>
