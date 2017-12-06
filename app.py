@@ -220,17 +220,19 @@ def readStories():
     f = open("stories.csv")
     strs = f.readlines()
     global poolMoney
+    global numUsers
     for i, stry in enumerate(strs[1:]):
         temp = stry.split(",")
         if temp[0]=="":
             break
-        #poolMoney+=5
+        poolMoney+=100
+        numUsers+=1
         storyList[temp[0]] = (Story.Story(temp[2], temp[0], temp[0], temp[3]))
         print storyList
         #print temp
     return
 
-#readStories()
+readStories()
 
 @app.after_request
 def add_header(r):
